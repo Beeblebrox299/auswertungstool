@@ -1,8 +1,11 @@
 'use client';
 
 import React, {useState} from "react";
+import Papa from "papaparse";
+import { useContribution } from "../Contexts";
 
 const FileUpload: React.FC = () => {
+    const { contributionArray, setContributionArray } = useContribution()
 
     // File uploaded by user
     const [file, setFile] = useState<File|null>(null);
@@ -20,14 +23,13 @@ const FileUpload: React.FC = () => {
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         if (file != null) {
-            const reader = new FileReader();
-            reader.readAsText(file);
-
-            // When readAsText has fisnished, log result
-            reader.onloadend = () => {
-                const fileContent = reader.result;
-                console.log(fileContent);
-              };
+              Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results: any) {
+                  setContributionArray([...contributionArray, ...results.data])
+                },
+              });
 
             setMessageText("Datei wurde hochgeladen");
         }
@@ -40,7 +42,7 @@ const FileUpload: React.FC = () => {
 
     return(
         <form onSubmit={handleSubmit}>
-            <input type="file" accept=".csv" onChange={e => handleChange(e.target.files)}/>
+            <input type="file" accept=".csv, .xls, .ods" onChange={e => handleChange(e.target.files)}/>
             <button type="submit">Hochladen</button>
             <p>{messageText}</p>
         </form>
