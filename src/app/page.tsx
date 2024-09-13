@@ -3,6 +3,7 @@
 import React from 'react';
 import FileUpload from './components/FileUpload';
 import { ContributionProvider } from './Contexts';
+import ManualInput from './components/ManualInput';
 import ContributionTable from './components/ContributionTable';
 
 const Dashboard: React.FC = () => {
@@ -10,6 +11,7 @@ const Dashboard: React.FC = () => {
         <div>
           <ContributionProvider>
             <FileUpload/>
+            <ManualInput/>
             <ContributionTable/>
           </ContributionProvider>
         </div>
