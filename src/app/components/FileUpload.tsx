@@ -1,5 +1,3 @@
-'use client';
-
 import React, {useState} from "react";
 import Papa from "papaparse";
 import { useContribution } from "../Contexts";
@@ -19,7 +17,7 @@ const FileUpload: React.FC = () => {
             setMessageText('');
         }
     }
-
+    // parse file & update contributionArray
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         if (file != null) {
@@ -47,34 +45,7 @@ const FileUpload: React.FC = () => {
             <br></br><br></br>
             <p><button type="submit">Hochladen</button><br></br>{messageText}</p>
         </form>
-        <h2>Beiträge</h2>
-        {contributionArray.length > 0 ? (
-            <table>
-                <thead>
-                    <tr>
-                        {/* Zeige die Schlüssel als Spaltenüberschriften */}
-                        {Array.from(new Set(contributionArray.flatMap(Object.keys))).map((key) => (
-                            <th key={key}>{key}</th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                        {contributionArray.map((contribution, index) => (
-                            <tr key={index}>
-                                {/* Dynamisch die Werte anzeigen, wobei die Keys überprüft werden */}
-                                {Array.from(new Set(contributionArray.flatMap(Object.keys))).map((key) => (
-                                    <td key={key}>
-                                        {contribution[key] !== undefined ? contribution[key] : 'N/A'}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-            </table>
-        ) : (   
-            <p>Keine Beiträge vorhanden.</p>
-        )}
-    </div>
+        </div>
     );
 }
 
