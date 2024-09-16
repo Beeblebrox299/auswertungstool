@@ -1,16 +1,12 @@
 'use client';
 
 import React from 'react';
-import FileUpload from './components/FileUpload';
-import ManualInput from './components/ManualInput';
-import ContributionTable from './components/ContributionTable';
+import Sidebar from './components/Navigation/Navbar'
 
 const Dashboard: React.FC = () => {
     return (
         <div>
-          <FileUpload/>
-          <ManualInput/>
-          <ContributionTable/>
+          <Sidebar/>
         </div>
     );
 }
