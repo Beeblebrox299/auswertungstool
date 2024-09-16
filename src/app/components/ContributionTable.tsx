@@ -1,8 +1,12 @@
-import { useContribution } from "../Contexts";
+import { useEffect, useState } from "react";
 
 const ContributionTable: React.FC = () => {
-    const { contributionArray } = useContribution();
-    const contributionKeys = Array.from(new Set(contributionArray.flatMap(Object.keys)));
+    const [contributions, setContributions] = useState<string|null>(null)
+    useEffect(() => {
+        setContributions(localStorage.getItem("contributions"));
+    }, [])
+    const contributionArray:any[] = (contributions != null) ? JSON.parse(contributions) : [];
+    const contributionKeys:string[] = Array.from(new Set(contributionArray.flatMap(Object.keys)));
 
     return(
         <div>

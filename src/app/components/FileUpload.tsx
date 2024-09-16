@@ -1,10 +1,7 @@
 import React, {useState} from "react";
 import Papa from "papaparse";
-import { useContribution } from "../Contexts";
 
 const FileUpload: React.FC = () => {
-    const { contributionArray, setContributionArray } = useContribution()
-
     // File uploaded by user
     const [file, setFile] = useState<File|null>(null);
 
@@ -25,7 +22,15 @@ const FileUpload: React.FC = () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results: any) {
-                  setContributionArray([...contributionArray, ...results.data]);
+                    const storedContributions = localStorage.getItem("contributions");
+                    let contributions: Object[]
+                    if (storedContributions == null) {
+                        contributions = results.data
+                    }
+                    else {
+                        contributions = [...JSON.parse(storedContributions), ...results.data]
+                    }
+                    localStorage.setItem("contributions", JSON.stringify(contributions))
                 },
               });
 

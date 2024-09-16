@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { useContribution } from "../Contexts";
+import { useState, useEffect } from "react";
 
 const ManualInput: React.FC = () => {
-    const { contributionArray, setContributionArray } = useContribution();
-    const contributionKeys = Array.from(new Set(contributionArray.flatMap(Object.keys)));
+    const [storedContributions, setStoredContributions] = useState<string|null>(null)
+    useEffect(() => {
+        setStoredContributions(localStorage.getItem("contributions"));
+    }, [])
+    const contributionArray:any[] = (storedContributions != null) ? JSON.parse(storedContributions) : [];
+    const contributionKeys:string[] = Array.from(new Set(contributionArray.flatMap(Object.keys)));
 
     const [inputValues, setInputValues] = useState<Record<string, string>>({});
     const handleInputChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +18,14 @@ const ManualInput: React.FC = () => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        setContributionArray([...contributionArray, inputValues])
+        let contributions: Object[]
+        if (storedContributions == null) {
+            contributions = [inputValues]
+        }
+        else {
+            contributions = [...JSON.parse(storedContributions), inputValues]
+        }
+        localStorage.setItem("contributions", JSON.stringify(contributions))
     }
 
     return(
