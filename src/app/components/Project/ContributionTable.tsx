@@ -10,7 +10,6 @@ const ContributionTable: React.FC = () => {
 
     return(
         <div>
-            <h2>Beiträge</h2>
             {contributionArray.length > 0 ? (
                 <table>
                     <thead>
