@@ -1,0 +1,10 @@
+.menu {
+    background-color:lightgrey;
+    padding: 20px;
+    list-style-type: none;
+    margin: 10px 0;
+  }
+  
+  .menu a:hover {
+    color: #606264;
+  }
