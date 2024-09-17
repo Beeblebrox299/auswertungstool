@@ -15,7 +15,7 @@ const menuItems = [
         link: "/overview"
     }
 ]
-const Sidebar: React.FC = () => {
+const Navbar: React.FC = () => {
     const buildMenu = () => {
         return menuItems.map((item) => (
             <Link
@@ -33,4 +33,4 @@ const Sidebar: React.FC = () => {
     )    
 }
 
-export default Sidebar;
+export default Navbar;
