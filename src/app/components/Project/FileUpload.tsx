@@ -22,6 +22,8 @@ const FileUpload: React.FC = () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results: any) {
+                    const fields = results.meta.fields
+                    // TODO: Ask user, which field (if any) holds the categorisation and whether to merge any column with an existing field -> Convert categories from string to references to category objects and update project fields
                     const storedContributions = localStorage.getItem("contributions");
                     let contributions: Object[]
                     if (storedContributions == null) {

@@ -30,9 +30,16 @@ const CategoryEdit: React.FC = () => {
         else {
             reset({categories:[{value: ""}]})
         }
-    }, [reset])
+    }, [reset]);
+
+    const removeCategory = (index: number) => {
+        // TODO: Check if Category is assigned to at least one contribution. If yes, ask for confirmation before deleting
+        remove(index)
+    }
 
     const onSubmit = (data: FormValues) => {
+        // TODO: Does this need to be handled differently if categories already exist? 
+        // TODO: Do I want to store references to contributions along with the category name? -> Object[] instead of string[]
         const categories:string[] = data.categories.map((item) => item.value)
         localStorage.setItem("categories", JSON.stringify(categories))
     };
@@ -44,12 +51,12 @@ const CategoryEdit: React.FC = () => {
                 <input type="string" key={field.id}
                 {...register(`categories.${index}.value`)} 
                 defaultValue={field.value}/>
-                <button type="button" onClick={() => remove(index)}><FaTrashAlt/></button>
+                <button type="button" onClick={() => removeCategory(index)}><FaTrashAlt/></button>
                 </div>
             ))}
             <button type="button" onClick={() => append({value: ""})}><FaPlusCircle/></button>
             <br/>
-            <button type="submit">Absenden</button>
+            <button type="submit">Speichern</button>
         </form>
     )
 };
