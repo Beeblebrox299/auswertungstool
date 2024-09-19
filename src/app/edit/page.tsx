@@ -16,7 +16,8 @@ const Edit: React.FC = () => {
           {projectExists.current ? ( 
             <>
               <FileUpload/>
-              <ManualInput/> 
+              <ManualInput/>
+              <Link href={"edit/categories"}>Kategorien bearbeiten</Link>
             </>
           ) : (
             <>

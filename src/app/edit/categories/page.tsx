@@ -1,10 +1,10 @@
 import React from "react";
 import CategoryEdit from "@/app/components/Project/CategoryEdit";
 
-const Init: React.FC = () => {
+const Categories: React.FC = () => {
     return (
         <CategoryEdit/>
     )
 }
 
-export default Init;
+export default Categories;

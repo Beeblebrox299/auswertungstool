@@ -9,7 +9,7 @@ interface FormValues{
     categories:{value: string}[]
 }
 
-const ProjektInit: React.FC = () => {
+const CategoryEdit: React.FC = () => {
     const { control, reset, register, handleSubmit } = useForm<FormValues>({
         defaultValues: {
             categories: [],
@@ -54,4 +54,4 @@ const ProjektInit: React.FC = () => {
     )
 };
 
-export default ProjektInit
+export default CategoryEdit
