@@ -1,62 +1,114 @@
 'use client'
 
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { FaTrashAlt, FaPlusCircle } from "react-icons/fa";
+import { FaTrashAlt, FaPlusCircle, FaPencilAlt, FaSave, FaUndoAlt } from "react-icons/fa";
 
 interface FormValues{
-    categories:{value: string}[]
+    categories:{
+        id: number,
+        name: string, 
+        assignedTo: number[],
+    }[]
 }
 
 const CategoryEdit: React.FC = () => {
+    const categoryIdRef = useRef(0)
+
     const { control, reset, register, handleSubmit } = useForm<FormValues>({
         defaultValues: {
             categories: [],
         },
     });
 
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "categories",
-    });
-
+    // get categories and current highest ID from local storage
     useEffect(() => {
-        const categories = localStorage.getItem("categories");
-        if (categories) {
-            const categoryArray = JSON.parse(categories);
-            reset({categories: categoryArray.map((category: string) => ({value: category}))})
+        const id = localStorage.getItem("highestCategoryId")
+        categoryIdRef.current = (id != null) ? JSON.parse(id) : 0;
+        const StringifiedCategories = localStorage.getItem("categories");
+        if (StringifiedCategories) {
+            const categoryArray = JSON.parse(StringifiedCategories);
+            reset({categories: categoryArray.map((category: {name: string, assignedTo: []}) => ({value: category}))})
         }
         else {
-            reset({categories:[{value: ""}]})
+            reset({categories:[{name: ""}]})
         }
     }, [reset]);
 
+    const [newCategory, setNewCategory] = useState<string>("");
+
+    const handleAppend = () => {
+        append({ id: categoryIdRef.current, name: newCategory, assignedTo: [] });
+        categoryIdRef.current = categoryIdRef.current + 1;
+        setNewCategory('');
+    }
+
+    const { fields: categories, append, remove } = useFieldArray({
+        control,
+        name: "categories", 
+    });
+
     const removeCategory = (index: number) => {
-        // TODO: Check if Category is assigned to at least one contribution. If yes, ask for confirmation before deleting
+        // Check if Category is assigned to at least one contribution. If yes, ask for confirmation before deleting
+        if (categories[index].assignedTo[0]) {
+            // TODO: Ask for confirmation
+            return
+        }
         remove(index)
     }
 
+    // Save FormValues to local Storage
     const onSubmit = (data: FormValues) => {
-        // TODO: Does this need to be handled differently if categories already exist? 
-        // TODO: Do I want to store references to contributions along with the category name? -> Object[] instead of string[]
-        const categories:string[] = data.categories.map((item) => item.value)
+        // TODO: Check if category name already exists (maybe already onChange)
+        const categories:Object[] = data.categories
         localStorage.setItem("categories", JSON.stringify(categories))
+        localStorage.setItem("highestCategoryId", JSON.stringify(categoryIdRef.current))
+        //TODO: Success message
     };
 
+    function editCategoryName(index: number): void {
+        // TODO: Edit Name
+        throw new Error("Function not implemented.");
+    }
+
     return(
-        <form onSubmit={handleSubmit(onSubmit)}>
-            {fields.map((field, index) => (
-                <div key={field.id}>
-                <input type="string" key={field.id}
-                {...register(`categories.${index}.value`)} 
-                defaultValue={field.value}/>
-                <button type="button" onClick={() => removeCategory(index)}><FaTrashAlt/></button>
+        <form className="inputForm" onSubmit={handleSubmit(onSubmit)}>
+            {categories.map((category, index) => (
+                <div key={category.id}>
+                    Kategorie {index + 1}: 
+                    <span className="info">{categories[index].name}</span>
+                    <button type="button" className="btn" onClick={() => editCategoryName(index)}>
+                        <span className="icon"><FaPencilAlt/></span>
+                        <span className="btn-label">Umbenennen</span>
+                    </button>
+                    <button type="button" className="btn" onClick={() => removeCategory(index)}>
+                        <span className="icon"><FaTrashAlt/></span>
+                        <span className="btn-label">Löschen</span> 
+                    </button>
                 </div>
             ))}
-            <button type="button" onClick={() => append({value: ""})}><FaPlusCircle/></button>
+            <div>
+            <input 
+                type="text" 
+                value={newCategory} 
+                onChange={e => setNewCategory(e.target.value)} 
+                placeholder="Neue Kategorie" 
+            />
+            <button type="button" className="btn" onClick={() => handleAppend()}>
+                <span className="icon"><FaPlusCircle/></span>
+                <span className="btn-label">Kategorie hinzufügen</span>
+            </button>
+            </div>
             <br/>
-            <button type="submit">Speichern</button>
+            <button type="submit" className="btn">
+                <span className="icon"><FaSave/></span>
+                <span className="btn-label">Speichern</span>
+            </button>
+            <button type="reset" className="btn">
+                <span className="icon"><FaUndoAlt/></span>
+                <span className="btn-label">Änderungen rückgängig machen</span>
+            </button>
         </form>
     )
 };

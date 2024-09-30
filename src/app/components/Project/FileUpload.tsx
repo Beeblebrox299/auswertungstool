@@ -13,8 +13,15 @@ const FileUpload: React.FC = () => {
             setFile(fileList[0]);
             setMessageText('');
         }
+    };
+
+    const parseFromStorage = (type:string) => {
+        const stored = localStorage.getItem(type);
+        const storedArray:any[] = (stored != null) ? JSON.parse(stored) : [];
+        return storedArray
     }
-    // parse file & update contributionArray
+
+    // parse file & update contributions in localStorage
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         if (file != null) {
@@ -22,17 +29,22 @@ const FileUpload: React.FC = () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results: any) {
-                    const fields = results.meta.fields
+                    const nextContributionIdJson = localStorage.getItem("nextContributionId");
+                    let nextContributionId: number = (nextContributionIdJson != null) ? JSON.parse(nextContributionIdJson) : 0;
+                    const newFields = results.meta.fields;
                     // TODO: Ask user, which field (if any) holds the categorisation and whether to merge any column with an existing field -> Convert categories from string to references to category objects and update project fields
-                    const storedContributions = localStorage.getItem("contributions");
-                    let contributions: Object[]
-                    if (storedContributions == null) {
-                        contributions = results.data
-                    }
-                    else {
-                        contributions = [...JSON.parse(storedContributions), ...results.data]
-                    }
-                    localStorage.setItem("contributions", JSON.stringify(contributions))
+                    const storedFields = parseFromStorage("fields");
+                    const fields = Array.from(new Set([...storedFields, ...newFields]));
+                    localStorage.setItem("fields", JSON.stringify(fields))
+                    const newContributions = results.data
+                    const storedContributions = parseFromStorage("contributions");
+                    storedContributions.forEach(contribution => {
+                        contribution.id = nextContributionId;
+                        nextContributionId++;
+                    });
+                    const contributions = [...storedContributions, ...newContributions];
+                    localStorage.setItem("contributions", JSON.stringify(contributions));
+                    localStorage.setItem("nextContributionId", JSON.stringify(nextContributionId));
                 },
               });
 
