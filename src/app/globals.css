@@ -10,3 +10,51 @@ table, th, td {
   border: 1px dotted black;
   border-collapse: collapse;
 }
+
+/* Button Styling from https://codepen.io/chrisbautista/pen/PoQjYJz */
+.btn {
+  --button-color: lightgray;
+  --button-text-color: var(--app-text-color);
+
+  box-sizing: border-box;
+  font-family: inherit;
+  padding: 0.3rem 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid var(--button-color);
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-right: 1rem;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    position: relative;
+    top: -1.5px;
+  }
+
+  & > .icon {
+    font-size: 1em;
+
+    & ~ .btn-label {
+      margin-left: 6px;
+    }
+  }
+}
+
+.info {
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  margin-right: 0.5rem;
+  margin-left: 0.1rem;
+  border: 0.5px solid lightgray;
+}
+
+.inputForm {
+  border-bottom: 0.5px solid lightgray;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
