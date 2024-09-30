@@ -17,7 +17,7 @@ const Edit: React.FC = () => {
             <>
               <FileUpload/>
               <ManualInput/>
-              <Link href={"edit/categories"}>Kategorien bearbeiten</Link>
+              <Link href={"edit/categories"}>Kategorien und Eingabefelder bearbeiten</Link>
             </>
           ) : (
             <>
