@@ -58,3 +58,7 @@ table, th, td {
   padding-bottom: 1rem;
   margin-bottom: 1rem;
 }
+
+.hidden {
+  display: none;
+}
