@@ -48,7 +48,7 @@ const FileUpload: React.FC = () => {
                 },
               });
 
-            setMessageText("Datei wurde hochgeladen");
+            setMessageText('"' + file.name + '" wurde hochgeladen');
         }
 
         else {
@@ -60,9 +60,11 @@ const FileUpload: React.FC = () => {
     return(
         <div>
         <form onSubmit={handleSubmit}>
-            <input type="file" accept=".csv, .xls, .ods" onChange={e => handleChange(e.target.files)}/>
-            <br></br><br></br>
-            <p><button type="submit">Hochladen</button><br></br>{messageText}</p>
+            <input type="file" accept=".csv" onChange={e => handleChange(e.target.files)}/>
+            <br/>
+            <button type="submit" className="btn">Hochladen</button>
+            <br/>
+            {messageText}
         </form>
         </div>
     );

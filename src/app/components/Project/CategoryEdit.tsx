@@ -54,7 +54,7 @@ const CategoryEdit: React.FC = () => {
     };
 
     return(
-        <form className="inputForm" onSubmit={handleSubmit(onSubmit)}>
+        <div className="displayBlock" onSubmit={handleSubmit(onSubmit)}>
             {categories.map((category, index) => (
                 <div key={category.id}>
                     Kategorie {index + 1}: 
@@ -106,7 +106,7 @@ const CategoryEdit: React.FC = () => {
             </button>
             </div>
             </div>
-        </form>
+        </div>
     )
 };
 

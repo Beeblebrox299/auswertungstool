@@ -15,9 +15,17 @@ const Edit: React.FC = () => {
         <div>
           {projectExists.current ? ( 
             <>
+            <div className='displayBlock'>
+              <h1>Beiträge aus CSV-Datei importieren:</h1>
               <FileUpload/>
+            </div>
+            <div className='displayBlock'>
+              <h1>Beitrag manuell eintragen:</h1>
               <ManualInput/>
-              <Link href={"edit/categories"}>Kategorien und Eingabefelder bearbeiten</Link>
+            </div>
+            <div className='displayBlock'>
+              <button className="btn" onClick={() => {window.location.href='edit/categories'}}>Kategorien und Eingabefelder bearbeiten</button>
+            </div>
             </>
           ) : (
             <>

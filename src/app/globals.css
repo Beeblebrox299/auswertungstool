@@ -11,6 +11,18 @@ table, th, td {
   border-collapse: collapse;
 }
 
+h1 {
+  font-size: large;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+input {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  margin-right: 0.5rem;
+}
+
 /* Button Styling from https://codepen.io/chrisbautista/pen/PoQjYJz */
 .btn {
   --button-color: lightgray;
@@ -53,7 +65,7 @@ table, th, td {
   border: 0.5px solid lightgray;
 }
 
-.inputForm {
+.displayBlock {
   border-bottom: 0.5px solid lightgray;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
