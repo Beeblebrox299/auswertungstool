@@ -1,7 +1,9 @@
-import React, {useState} from "react";
+import React, {useState, useRef} from "react";
 import Papa from "papaparse";
 
 const FileUpload: React.FC = () => {
+    const fileInputRef = useRef<HTMLInputElement>(null)
+
     // File uploaded by user
     const [file, setFile] = useState<File|null>(null);
 
@@ -45,10 +47,12 @@ const FileUpload: React.FC = () => {
                     const contributions = [...storedContributions, ...newContributions];
                     localStorage.setItem("contributions", JSON.stringify(contributions));
                     localStorage.setItem("nextContributionId", JSON.stringify(nextContributionId));
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = ""
+                    }
+                    setMessageText('"' + file.name + '" wurde hochgeladen');
                 },
               });
-
-            setMessageText('"' + file.name + '" wurde hochgeladen');
         }
 
         else {
@@ -60,7 +64,7 @@ const FileUpload: React.FC = () => {
     return(
         <div>
         <form onSubmit={handleSubmit}>
-            <input type="file" accept=".csv" onChange={e => handleChange(e.target.files)}/>
+            <input type="file" accept=".csv" ref={fileInputRef} onChange={e => handleChange(e.target.files)}/>
             <br/>
             <button type="submit" className="btn">Hochladen</button>
             <br/>
