@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { FaPlusCircle, FaPencilAlt, FaSave, FaTrashAlt } from "react-icons/fa";
 
 interface Category{
@@ -14,12 +13,6 @@ interface Category{
 const CategoryEdit: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [newCategoryName, setNewCategoryName] = useState<string>("");
-
-    const { control, reset, register, handleSubmit } = useForm({
-        defaultValues: {
-            categories: [],
-        },
-    });
 
     // get categories and current highest ID from local storage
     useEffect(() => {
@@ -54,7 +47,7 @@ const CategoryEdit: React.FC = () => {
     };
 
     return(
-        <div className="displayBlock" onSubmit={handleSubmit(onSubmit)}>
+        <div className="displayBlock">
             {categories.map((category, index) => (
                 <div key={category.id}>
                     Kategorie {index + 1}: 
