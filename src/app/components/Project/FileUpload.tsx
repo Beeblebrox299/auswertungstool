@@ -1,4 +1,5 @@
 import React, {useState, useRef} from "react";
+import { generateId } from "@/app/utils";
 import Papa from "papaparse";
 
 const FileUpload: React.FC = () => {
@@ -31,22 +32,18 @@ const FileUpload: React.FC = () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results: any) {
-                    const nextContributionIdJson = localStorage.getItem("nextContributionId");
-                    let nextContributionId: number = (nextContributionIdJson != null) ? JSON.parse(nextContributionIdJson) : 0;
                     const newFields = results.meta.fields;
                     // TODO: Ask user, which field (if any) holds the categorisation and whether to merge any column with an existing field -> Convert categories from string to references to category objects and update project fields
                     const storedFields = parseFromStorage("fields");
                     const fields = Array.from(new Set([...storedFields, ...newFields]));
                     localStorage.setItem("fields", JSON.stringify(fields))
-                    const newContributions = results.data
+                    const newContributions:any[] = results.data
                     const storedContributions = parseFromStorage("contributions");
-                    storedContributions.forEach(contribution => {
-                        contribution.id = nextContributionId;
-                        nextContributionId++;
+                    newContributions.forEach(contribution => {
+                        contribution.id = generateId();
                     });
                     const contributions = [...storedContributions, ...newContributions];
                     localStorage.setItem("contributions", JSON.stringify(contributions));
-                    localStorage.setItem("nextContributionId", JSON.stringify(nextContributionId));
                     if (fileInputRef.current) {
                         fileInputRef.current.value = ""
                     }

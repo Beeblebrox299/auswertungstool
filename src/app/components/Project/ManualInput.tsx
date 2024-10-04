@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react";
+import { generateId } from "@/app/utils";
 
 const ManualInput: React.FC = () => {
-    const [storedContributions, setStoredContributions] = useState<string|null>(null)
+    const [storedContributions, setStoredContributions] = useState<Record<string, any>[]>([]);
+    const [inputValues, setInputValues] = useState<Record<string, any>>({});
     useEffect(() => {
-        setStoredContributions(localStorage.getItem("contributions"));
+        const contributionString = localStorage.getItem("contributions")
+        let contributionArray:Record<string, any>[] = (contributionString != null) ? JSON.parse(contributionString) : [];
+        setStoredContributions(contributionArray);
     }, [])
-    const contributionArray:any[] = (storedContributions != null) ? JSON.parse(storedContributions) : [];
-    const contributionKeys:string[] = Array.from(new Set(contributionArray.flatMap(Object.keys)));
+    const contributionsWithoutId = storedContributions.map(contribution => ({ ...contribution }));
+    contributionsWithoutId.forEach((contribution) => {
+        delete contribution.id;
+    });
+    const contributionKeys:string[] = Array.from(new Set(contributionsWithoutId.flatMap(Object.keys)));
 
-    const [inputValues, setInputValues] = useState<Record<string, string>>({});
     const handleInputChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValues(inputValues => ({
             ...inputValues,
@@ -18,14 +24,18 @@ const ManualInput: React.FC = () => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        let contributions: Object[]
-        if (storedContributions == null) {
-            contributions = [inputValues]
+        if (Object.keys(inputValues).length == 0) {
+            throw new Error ("No input")
         }
-        else {
-            contributions = [...JSON.parse(storedContributions), inputValues]
+        const newContribution:Record<string, any> = {
+            ...inputValues,
+            id: generateId(),
         }
-        localStorage.setItem("contributions", JSON.stringify(contributions))
+        const newContributionArray = storedContributions.map(contribution => ({ ...contribution }));
+        newContributionArray.push(newContribution);
+        localStorage.setItem("contributions", JSON.stringify(newContributionArray));
+        setStoredContributions(newContributionArray);   
+        setInputValues({});
     }
 
     return(
