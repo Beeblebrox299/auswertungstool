@@ -46,29 +46,30 @@ const FieldEdit: React.FC = () => {
     };
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="displayBlock">
             <h1>Datenfelder</h1>
             <div className="grid gap-y-8">
             {fields.map((field, index) => (
                 <div key={field.id}>
+                <span className="info">
                 Name: &nbsp;
-                <input type="string" key={field.id}
+                <input type="string" className="info border" key={field.id}
                 {...register(`fields.${index}.value`)} 
-                defaultValue={field.value}/> 
-                <br/>
-                Art: &nbsp;
-                <select name="type">
+                defaultValue={field.value}/>
+                </span>
+                <span className="info">Art: &nbsp;
+                <select name="type" className="info border">
                     <option value="string">Text</option>
                     <option value="number">Zahl</option>
                 </select>
-                <br/>
-                <button type="button" onClick={() => removeCategory(index)}><FaTrashAlt/></button>
+                </span>
+                <button type="button" className="btn info" onClick={() => removeCategory(index)}><FaTrashAlt/></button>
                 </div>
             ))}
             </div>
-            <button type="button" onClick={() => append({value: ""})}><FaPlusCircle/></button>
+            <button type="button" className="btn" onClick={() => append({value: ""})}><FaPlusCircle/></button>
             <br/>
-            <button type="submit">Speichern</button>
+            <button type="submit" className="btn">Speichern</button>
         </form>
     )
 };
