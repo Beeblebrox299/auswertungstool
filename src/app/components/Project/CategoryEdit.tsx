@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
+import { generateId } from "@/app/utils";
 import { FaPlusCircle, FaPencilAlt, FaSave, FaTrashAlt } from "react-icons/fa";
 
 interface Category{
@@ -14,7 +15,7 @@ const CategoryEdit: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);
     const [newCategoryName, setNewCategoryName] = useState<string>("");
 
-    // get categories and current highest ID from local storage
+    // get categories from local storage
     useEffect(() => {
         const StringifiedCategories = localStorage.getItem("categories");
         if (StringifiedCategories) {
@@ -22,42 +23,52 @@ const CategoryEdit: React.FC = () => {
         }
     }, []);
 
-    const handleAppend = () => {
-        const newCategory:Category = {
-            // id setting should be changed if software is used by multiple users simultaneously
-            id: (new Date).getTime(), 
-            name: "",
-            assignedTo: [],
-        }
-        setCategories([...categories, newCategory])
-        setNewCategoryName('');
+    const saveChanges = (newCategoryArray: Category[]): void => {
+        setCategories(newCategoryArray);
+        localStorage.setItem("categories", JSON.stringify(newCategoryArray))
     }
     
     // Save FormValues to local Storage
-    const onSubmit = (data: any) => {
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault()
+        if (newCategoryName == "") {
+            throw new Error("Category name cannot be empty")
+        }
+        const newCategory:Category = {
+            id: generateId(),
+            name: newCategoryName,
+            assignedTo: []
+        };
+        saveChanges([...categories, newCategory])
+        setNewCategoryName('');
         // TODO: Check if category name already exists (maybe already onChange)
-        const categories:Object[] = data.categories
-        localStorage.setItem("categories", JSON.stringify(categories))
-        //TODO: Success message
     };
 
-    function editCategoryName(index: number): void {
+    const editCategoryName = (index: number): void =>{
         // TODO: Edit Name
         throw new Error("Function not implemented.");
     };
 
+    const confirmDelete = (timesUsed: number): string => {
+        const baseMessage = "Kategorie löschen? "
+        const specificMessage = (timesUsed > 0) ? "Sie ist " + timesUsed + " Kategorien zugewiesen" : "Sie wird aktuell nicht verwendet."
+        return baseMessage + specificMessage
+    }
+
     return(
         <div className="displayBlock">
-            {categories.map((category, index) => (
-                <div key={category.id}>
+            {categories.map((currentCategory, index) => (
+                <div key={currentCategory.id} className="info">
                     Kategorie {index + 1}: 
-                    <span className="info">{category.name}</span>
+                    <span className="info border">{currentCategory.name}</span>
                     <button type="button" className="btn" onClick={() => editCategoryName(index)}>
                         <span className="icon"><FaPencilAlt/></span>
                         <span className="btn-label">Umbenennen</span>
                     </button>
                         <button type="button" className="btn" onClick={() => {
-                            if (window.confirm("Kategorie löschen?")) {
+                            if (window.confirm(confirmDelete(currentCategory.assignedTo.length))) {
+                                // TODO: Remove reference from assigned contributions
+                                saveChanges(categories.filter(category => category !== currentCategory));
                             };
                             }}
                         >
@@ -67,7 +78,7 @@ const CategoryEdit: React.FC = () => {
                 </div>
             ))}
             <div>
-            <div id="newCategoryButton">
+            <div id="newCategoryButton" className="info">
             <button type="button" className="btn" onClick={() => {
                 const newCategoryForm:HTMLElement|null = document.getElementById("newCategoryForm");
                 const newCategoryButton:HTMLElement|null = document.getElementById("newCategoryButton");
@@ -86,18 +97,18 @@ const CategoryEdit: React.FC = () => {
                 <span className="btn-label">Neue Kategorie hinzufügen</span>
             </button>
             </div>
-            <div id="newCategoryForm" className="hidden">
+            <form id="newCategoryForm" className="hidden" onSubmit={e => handleSubmit(e)}>
             <input 
                 type="text" 
                 value={newCategoryName} 
                 onChange={e => setNewCategoryName(e.target.value)} 
-                placeholder="Neue Kategorie" 
+                placeholder="Neue Kategorie"
             />
-            <button type="button" className="btn" onClick={() => handleAppend()}>
+            <button type="submit" className="btn">
                 <span className="icon"><FaSave/></span>
                 <span className="btn-label">Neue Kategorie speichern</span>
             </button>
-            </div>
+            </form>
             </div>
         </div>
     )
