@@ -1,21 +1,17 @@
 import { useEffect, useState } from "react";
+import { getContributions } from "@/app/utils";
 
 const ContributionTable: React.FC = () => {
-    const [contributions, setContributions] = useState<Object[]|null>(null)
+    const [contributions, setContributions] = useState<Record<string, any>[]>([])
     useEffect(() => {
-        const contributionString = localStorage.getItem("contributions")
-        let contributionArray:any[] = (contributionString != null) ? JSON.parse(contributionString) : [];
-        contributionArray.forEach( (contribution) => {
-            delete contribution.id;
-        })
+        const contributionArray = getContributions(false)
         setContributions(contributionArray);
     }, [])
-    const contributionArray:any[] = (contributions != null) ? contributions : [];
-    const contributionKeys:string[] = Array.from(new Set(contributionArray.flatMap(Object.keys)));
+    const contributionKeys:string[] = Array.from(new Set(contributions.flatMap(Object.keys)));
 
     return(
         <div>
-            {contributionArray.length > 0 ? (
+            {contributions.length > 0 ? (
                 <table>
                     <thead>
                         <tr>
@@ -25,16 +21,16 @@ const ContributionTable: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                            {contributionArray.map((contribution, index) => (
-                                <tr key={index}>
-                                    {contributionKeys.map((key) => (
-                                        <td key={key}>
-                                            {contribution[key] !== undefined ? contribution[key] : 'N/A'}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
+                        {contributions.map((contribution, index) => (
+                            <tr key={index}>
+                                {contributionKeys.map((key) => (
+                                    <td key={key}>
+                                        {contribution[key] !== undefined ? contribution[key] : 'N/A'}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
                 </table>
             ) : (   
                 <p>Keine Beiträge vorhanden.</p>
