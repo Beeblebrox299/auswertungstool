@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { getContributions } from "@/app/utils";
+import { getArrayFromStorage } from "@/app/utils";
 
 const ContributionTable: React.FC = () => {
     const [contributions, setContributions] = useState<Record<string, any>[]>([])
     useEffect(() => {
-        const contributionArray = getContributions(false)
+        const contributionArray = getArrayFromStorage("contributions", false)
         setContributions(contributionArray);
     }, [])
     const contributionKeys:string[] = Array.from(new Set(contributions.flatMap(Object.keys)));

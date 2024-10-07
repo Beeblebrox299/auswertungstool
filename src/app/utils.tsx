@@ -4,14 +4,14 @@ export const generateId = ():number => {
     return Math.floor(Math.random() * 10000000000)
 };
 
-export const getContributions = (withId: boolean = true) => {
-    const contributionString = localStorage.getItem("contributions")
-    let contributionArray:Record<string, any>[] = (contributionString != null) ? JSON.parse(contributionString) : [];
+export const getArrayFromStorage = (type: string, withId: boolean = true) => {
+    const storedString = localStorage.getItem(type)
+    let storedArray:Record<string, any>[] = (storedString != null) ? JSON.parse(storedString) : [];
     if (!withId) {
-        contributionArray.forEach( (contribution) => {
+        storedArray.forEach( (contribution) => {
         delete contribution.id;
         })
     }
-    return contributionArray
+    return storedArray
         
 }

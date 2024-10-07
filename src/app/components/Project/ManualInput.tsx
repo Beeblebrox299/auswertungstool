@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { generateId, getContributions } from "@/app/utils";
+import { generateId, getArrayFromStorage } from "@/app/utils";
 
 const ManualInput: React.FC = () => {
     const [storedContributions, setStoredContributions] = useState<Record<string, any>[]>([]);
     const [inputValues, setInputValues] = useState<Record<string, any>>({});
     useEffect(() => {
-        const contributionArray = getContributions()
+        const contributionArray = getArrayFromStorage("contributions")
         setStoredContributions(contributionArray);
     }, [])
     const contributionsWithoutId = storedContributions.map(contribution => ({ ...contribution }));
