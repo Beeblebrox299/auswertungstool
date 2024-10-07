@@ -1,17 +1,38 @@
+export interface Contribution {
+    id: number,
+    category: number|null,
+    [key:string]: any,
+}
+
+export interface Category {
+    id: number,
+    name: string,
+    assignedTo: number[],
+}
+
 export const generateId = ():number => {
     /* FIXME: I'm not working with a huge number of contributions, so the probability of 2 IDs being equal is fairly small (about 0.02% for 2000 IDs).
     When working with a bigger number of IDs, this should be adapted*/ 
     return Math.floor(Math.random() * 10000000000)
 };
 
-export const getArrayFromStorage = (type: string, withId: boolean = true) => {
-    const storedString = localStorage.getItem(type)
-    let storedArray:Record<string, any>[] = (storedString != null) ? JSON.parse(storedString) : [];
-    if (!withId) {
-        storedArray.forEach( (contribution) => {
-        delete contribution.id;
-        })
-    }
+export const getContributions = () => {
+    const storedString = localStorage.getItem("contributions")
+    let storedArray: Contribution[] = (storedString != null) ? JSON.parse(storedString) : [];
     return storedArray
-        
+};
+
+export const getContributionsWithoutId = () => {
+    const storedArray = getContributions()
+    const contributionsWithoutId: Record<string, any>[] = storedArray.map(contribution => ({ ...contribution }));
+    contributionsWithoutId.forEach(contribution => {
+        delete contribution.id
+    });
+    return contributionsWithoutId
+};
+
+export const getCategories = () => {
+    const storedString = localStorage.getItem("categories")
+    let storedArray: Category[] = (storedString != null) ? JSON.parse(storedString) : [];
+    return storedArray
 }

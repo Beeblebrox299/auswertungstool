@@ -1,11 +1,11 @@
-import { getArrayFromStorage } from "@/app/utils";
+import { Contribution, getContributions } from "@/app/utils";
 import { useState, useEffect } from "react";
 import CodingBox from "./CodingBox";
 
 const Coding: React.FC = () => {
-    const [contributions, setContributions] = useState<Record<string, any>[]>([])
+    const [contributions, setContributions] = useState<Contribution[]>([])
     useEffect(() => {
-        const contributionArray = getArrayFromStorage("contributions")
+        const contributionArray = getContributions()
         setContributions(contributionArray);
     }, [])
     return(

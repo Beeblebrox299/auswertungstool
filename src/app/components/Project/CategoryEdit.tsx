@@ -2,14 +2,8 @@
 
 import React from "react";
 import { useEffect, useState } from "react";
-import { generateId } from "@/app/utils";
+import { Category, generateId } from "@/app/utils";
 import { FaPlusCircle, FaPencilAlt, FaSave, FaTrashAlt } from "react-icons/fa";
-
-interface Category{
-    id: number,
-    name: string, 
-    assignedTo: number[],
-}
 
 const CategoryEdit: React.FC = () => {
     const [categories, setCategories] = useState<Category[]>([]);

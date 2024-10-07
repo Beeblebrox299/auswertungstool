@@ -1,5 +1,5 @@
 import React, {useState, useRef} from "react";
-import { generateId } from "@/app/utils";
+import { Contribution, generateId, getContributions } from "@/app/utils";
 import Papa from "papaparse";
 
 const FileUpload: React.FC = () => {
@@ -18,12 +18,6 @@ const FileUpload: React.FC = () => {
         }
     };
 
-    const parseFromStorage = (type:string) => {
-        const stored = localStorage.getItem(type);
-        const storedArray:any[] = (stored != null) ? JSON.parse(stored) : [];
-        return storedArray
-    }
-
     // parse file & update contributions in localStorage
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -32,13 +26,14 @@ const FileUpload: React.FC = () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results: any) {
-                    const newFields = results.meta.fields;
+                    const newFields: string[] = results.meta.fields;
                     // TODO: Ask user, which field (if any) holds the categorisation and whether to merge any column with an existing field -> Convert categories from string to references to category objects and update project fields
-                    const storedFields = parseFromStorage("fields");
+                    const storedFieldsString = localStorage.getItem("fields");
+                    const storedFields:string[] = (storedFieldsString != null) ? JSON.parse(storedFieldsString) : [];
                     const fields = Array.from(new Set([...storedFields, ...newFields]));
                     localStorage.setItem("fields", JSON.stringify(fields))
-                    const newContributions:any[] = results.data
-                    const storedContributions = parseFromStorage("contributions");
+                    const newContributions:Contribution[] = results.data
+                    const storedContributions = getContributions();
                     newContributions.forEach(contribution => {
                         contribution.id = generateId();
                     });
