@@ -1,5 +1,5 @@
 import React, {useState, useRef} from "react";
-import { Contribution, generateId, getContributions } from "@/app/utils";
+import { Contribution, Category, generateId, getContributions, getCategories } from "@/app/utils";
 import Papa from "papaparse";
 
 interface PopupProps {
@@ -75,6 +75,42 @@ const FileUpload: React.FC = () => {
     };
 
     const handleSelect = (selectedField: string) => {
+        if (!file || !data) {
+            setMessageText("Keine Datei gefunden. Bitte Seite neu laden und nochmal versuchen!")
+            throw new Error("no file selected");
+        };
+
+        const categories = getCategories();
+
+        data.forEach((contribution: Contribution) => {
+            contribution.id = generateId();
+            // Check if Contribution has selected key. If so, convert to category field
+            if (Object.keys(contribution).includes(selectedField)) {
+                const categoryName = contribution[selectedField];
+                let categoryIndex: number | null = null
+                categories.forEach((category, index) => {
+                    if (category.name === categoryName) {
+                        categoryIndex = index;
+                    }
+                });
+                if (categoryIndex !== null) {
+                    const category = categories[categoryIndex];
+                    contribution.category = category.id;
+                    category.assignedTo.push(contribution.id);
+                }
+                else {
+                    const newCategory:Category = {
+                        id: generateId(),
+                        name: categoryName,
+                        assignedTo: [contribution.id]
+                    };
+                    contribution.category = newCategory.id;
+                    categories.push(newCategory);
+                }
+                delete contribution[selectedField];
+                console.log(contribution)
+            }
+        });
         /* 
         TODO: 
         - convert values of selectedField names to category-IDs
@@ -95,8 +131,9 @@ const FileUpload: React.FC = () => {
         localStorage.setItem("contributions", JSON.stringify(contributions));
         if (fileInputRef.current) {
             fileInputRef.current.value = ""
-        }
-        setMessageText('"' + file.name + '" wurde hochgeladen'); */
+        } */
+       
+        setMessageText('"' + file.name + '" wurde hochgeladen');
         setCategoryFieldSet(true)
     }
 
@@ -116,9 +153,16 @@ const FileUpload: React.FC = () => {
                 onSelect={handleSelect}
             />
         )}
-        {messageText}
+        <span className="info">{messageText}</span>
+        <br/>
         {(fileUploaded && categoryFieldSet) && (
-            <button>Weitere Datei hochladen</button>
+            <button className="btn" onClick={() => {
+                setFileUploaded(false); 
+                setCategoryFieldSet(false);
+                setMessageText("")
+            }}>
+                Weitere Datei hochladen
+            </button>
         )}
         </div>
     );
