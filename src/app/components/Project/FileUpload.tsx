@@ -9,21 +9,29 @@ interface PopupProps {
 
 const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
     const [selected, setSelected] = useState<string>("none");
-
+    const [seperator, setSeperator] = useState<string>("");
+    const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
+    const multiCategoryEnabled: boolean = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : false
+    
     return (
         <div>
             <h2>In welchem Feld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
             <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
-                <option value={"none"}>
-                    Keins
-                </option>
+                <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
                 {fields.map((field) => (
                     <option key={field} value={field}>
                         {field}
                     </option>
                 ))}
             </select>
-            <button className="btn" onClick={() => onSelect(selected)}>OK</button>
+            {multiCategoryEnabled && (<>
+                <h2>Durch welches Zeichen sind die Kategorien getrennt?</h2>
+                <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
+                    <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
+                    <option value=";"> ; </option>
+                </select></>
+            )}  
+            <button className="btn" onClick={() => onSelect(selected, seperator)}>OK</button>
         </div>
     )
 };
@@ -74,7 +82,7 @@ const FileUpload: React.FC = () => {
         return
     };
 
-    const handleSelect = (selectedField: string) => {
+    const handleSelect = (selectedField: string, seperator: string) => {
         if (!file || !data) {
             setMessageText("Keine Datei gefunden. Bitte Seite neu laden und nochmal versuchen!")
             throw new Error("no file selected");
@@ -86,27 +94,39 @@ const FileUpload: React.FC = () => {
             contribution.id = generateId();
             // Check if Contribution has selected key. If so, convert to category field
             if (Object.keys(contribution).includes(selectedField)) {
-                const categoryName = contribution[selectedField];
-                let categoryIndex: number | null = null
-                categories.forEach((category, index) => {
-                    if (category.name === categoryName) {
-                        categoryIndex = index;
-                    }
-                });
-                if (categoryIndex !== null) {
-                    const category = categories[categoryIndex];
-                    contribution.category = category.id;
-                    category.assignedTo.push(contribution.id);
+                let categoryNames: string[]
+                if (seperator) {
+                    categoryNames = contribution[selectedField].split(seperator);
+                    categoryNames = categoryNames.filter ((item) => {
+                        return item !== ""
+                    })
                 }
                 else {
-                    const newCategory:Category = {
-                        id: generateId(),
-                        name: categoryName,
-                        assignedTo: [contribution.id]
-                    };
-                    contribution.category = newCategory.id;
-                    categories.push(newCategory);
-                }
+                    categoryNames = [contribution[selectedField]]
+                };
+
+                categoryNames.forEach(categoryName => {
+                    let categoryIndex: number | null = null
+                    categories.forEach((category, index) => {
+                        if (category.name === categoryName) {
+                            categoryIndex = index;
+                        }
+                    });
+                    if (categoryIndex !== null) {
+                        const category = categories[categoryIndex];
+                        contribution.category = category.id;
+                        category.assignedTo.push(contribution.id);
+                    }
+                    else {
+                        const newCategory:Category = {
+                            id: generateId(),
+                            name: categoryName,
+                            assignedTo: [contribution.id]
+                        };
+                        contribution.category = newCategory.id;
+                        categories.push(newCategory);
+                    }
+                });
                 delete contribution[selectedField];
             }
         });
@@ -114,9 +134,6 @@ const FileUpload: React.FC = () => {
         const storedContributions = getContributions();
         localStorage.setItem("categories", JSON.stringify(categories));
         localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
-        /* 
-        TODO: Enable Multi-Category contributions
-            -> Ask user for seperator in file values */
         setMessageText('"' + file.name + '" wurde hochgeladen');
         setCategoryFieldSet(true)
     }
