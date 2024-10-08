@@ -41,7 +41,7 @@ const FileUpload: React.FC = () => {
     const [file, setFile] = useState<File|null>(null);
 
     // parsed file
-    const [data, setData] = useState<Record<string, any>|null>(null)
+    const [data, setData] = useState<[]|null>(null)
 
     // Message to show after user hits 'submit'
     const [messageText, setMessageText] = useState<string>('');
@@ -108,31 +108,15 @@ const FileUpload: React.FC = () => {
                     categories.push(newCategory);
                 }
                 delete contribution[selectedField];
-                console.log(contribution)
             }
         });
-        /* 
-        TODO: 
-        - convert values of selectedField names to category-IDs
-        - set "category" property
 
-        Bigger Todos:
-        - Enable Multi-Category contributions
-            -> Ask user for seperator in file values
-
-        copied from handleSubmit:
-        localStorage.setItem("fields", JSON.stringify(fields))
-        const newContributions:Contribution[] = results.data
         const storedContributions = getContributions();
-        newContributions.forEach(contribution => {
-            contribution.id = generateId();
-        });
-        const contributions = [...storedContributions, ...newContributions];
-        localStorage.setItem("contributions", JSON.stringify(contributions));
-        if (fileInputRef.current) {
-            fileInputRef.current.value = ""
-        } */
-       
+        localStorage.setItem("categories", JSON.stringify(categories));
+        localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
+        /* 
+        TODO: Enable Multi-Category contributions
+            -> Ask user for seperator in file values */
         setMessageText('"' + file.name + '" wurde hochgeladen');
         setCategoryFieldSet(true)
     }
