@@ -3,14 +3,15 @@
 import React from 'react';
 import { useMemo, useRef } from 'react';
 import Link from 'next/link';
-import FileUpload from '../components/Project/FileUpload';
-import ManualInput from '../components/Project/ManualInput';
+import FileUpload from '../components/Project/edit/FileUpload';
+import ManualInput from '../components/Project/edit/ManualInput';
 
 const Edit: React.FC = () => {
-  const projectExists = useRef<boolean>(false);
+  const projectExists = useRef<boolean>(true);
+/* funktioniert nur auf dev, muss noch ne Lösung für prod finden
   useMemo(() => {
       projectExists.current = localStorage.getItem("contributions") !== null || localStorage.getItem("categories") !== null;
-  }, [])
+  }, [])*/
     return (
         <div>
           {projectExists.current ? ( 

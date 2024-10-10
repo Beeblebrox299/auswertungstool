@@ -51,6 +51,7 @@ const CategoryEdit: React.FC = () => {
 
     return(
         <div className="displayBlock">
+            <h1>Kategorien</h1>
             {categories.map((currentCategory, index) => (
                 <div key={currentCategory.id} className="info">
                     Kategorie {index + 1}: 

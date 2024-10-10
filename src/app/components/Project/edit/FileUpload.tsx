@@ -29,6 +29,7 @@ const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
                 <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
                     <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
                     <option value=";"> ; </option>
+                    {/* TODO: Add more options and let user input custom seperator value */}
                 </select></>
             )}  
             <button className="btn" onClick={() => onSelect(selected, seperator)}>OK</button>

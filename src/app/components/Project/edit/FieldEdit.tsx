@@ -9,7 +9,7 @@ interface FormValues{
     fields:{value: string}[]
 }
 
-// TODO: support renaming of categories/fields
+// TODO: Rework variable names
 const FieldEdit: React.FC = () => {
     const { control, reset, register, handleSubmit } = useForm<FormValues>({
         defaultValues: {
@@ -63,11 +63,16 @@ const FieldEdit: React.FC = () => {
                     <option value="number">Zahl</option>
                 </select>
                 </span>
-                <button type="button" className="btn info" onClick={() => removeCategory(index)}><FaTrashAlt/></button>
+                <button type="button" className="btn info" onClick={() => removeCategory(index)}>
+                    <span className="icon"><FaTrashAlt/></span>
+                    <span className="btn-label">Löschen</span> 
+                </button>
                 </div>
             ))}
             </div>
-            <button type="button" className="btn" onClick={() => append({value: ""})}><FaPlusCircle/></button>
+            <button type="button" className="btn" onClick={() => append({value: ""})}>
+                <span className="icon"><FaPlusCircle/></span>
+                <span className="btn-label">Neues Datenfeld hinzufügen</span></button>
             <br/>
             <button type="submit" className="btn">Speichern</button>
         </form>
