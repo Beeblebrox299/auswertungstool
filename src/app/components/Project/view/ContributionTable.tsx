@@ -8,17 +8,16 @@ const ContributionTable: React.FC = () => {
         const categoryArray = getCategories()
         const contributionContentArray: Record<string, any>[] = [...contributionArray];
         contributionContentArray.forEach(contribution => {
-            const getCategoryName = () => {
-                const category = categoryArray.find(category => {
-                    return category.id === contribution.category
+            const getCategoryNames = () => {
+                const categories = categoryArray.filter(category => {
+                    return contribution.categories.includes(category.id)
                 })
-                if (!category) {
-                    return "Keine Kategorie"
-                }
-                return category.name
+                const categoryNames = categories.map(category => "- " + category.name)
+                return categoryNames.join("\n")
             }
+            contribution.Kategorie = getCategoryNames();
             delete contribution.id;
-            contribution.category = getCategoryName()
+            delete contribution.categories;
         });
         setContributions(contributionContentArray);
     }, [])
@@ -39,7 +38,7 @@ const ContributionTable: React.FC = () => {
                         {contributions.map((contribution, index) => (
                             <tr key={index}>
                                 {contributionKeys.map((key) => (
-                                    <td key={key}>
+                                    <td style={{whiteSpace: "pre-wrap"}} key={key}>
                                         {contribution[key] !== undefined ? contribution[key] : 'N/A'}
                                     </td>
                                 ))}

@@ -93,6 +93,7 @@ const FileUpload: React.FC = () => {
 
         data.forEach((contribution: Contribution) => {
             contribution.id = generateId();
+            contribution.categories = [];
             // Check if Contribution has selected key. If so, convert to category field
             if (Object.keys(contribution).includes(selectedField)) {
                 let categoryNames: string[]
@@ -108,6 +109,7 @@ const FileUpload: React.FC = () => {
 
                 categoryNames.forEach(categoryName => {
                     let categoryIndex: number | null = null
+
                     categories.forEach((category, index) => {
                         if (category.name === categoryName) {
                             categoryIndex = index;
@@ -115,7 +117,7 @@ const FileUpload: React.FC = () => {
                     });
                     if (categoryIndex !== null) {
                         const category = categories[categoryIndex];
-                        contribution.category = category.id;
+                        contribution.categories.push(category.id);
                         category.assignedTo.push(contribution.id);
                     }
                     else {
@@ -124,7 +126,7 @@ const FileUpload: React.FC = () => {
                             name: categoryName,
                             assignedTo: [contribution.id]
                         };
-                        contribution.category = newCategory.id;
+                        contribution.categories.push(newCategory.id);
                         categories.push(newCategory);
                     }
                 });

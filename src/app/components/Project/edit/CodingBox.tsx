@@ -30,7 +30,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
         });
         contributionArray.forEach(contribution => {
             if (contribution.id === contributionWithId.id) {
-                contribution.category = JSON.parse(categoryId)
+                contribution.categories.push(JSON.parse(categoryId))
             }
         });
         localStorage.setItem("contributions", JSON.stringify(contributionArray))

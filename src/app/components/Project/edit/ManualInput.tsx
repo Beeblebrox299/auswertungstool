@@ -33,7 +33,8 @@ const ManualInput: React.FC = () => {
         }
         const newContribution: Contribution = {
             ...inputValues,
-            category: (categoryId) ? JSON.parse(categoryId) : null,
+            // TODO: Add multi-category support
+            categories: (categoryId) ? JSON.parse(categoryId) : null,
             id: generateId(),
         }
         const newContributionArray = storedContributions.map(contribution => ({ ...contribution }));

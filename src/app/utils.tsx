@@ -1,6 +1,6 @@
 export interface Contribution {
     id: number,
-    category: number|null,
+    categories: number[],
     [key:string]: any,
 }
 
