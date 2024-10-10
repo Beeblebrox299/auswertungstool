@@ -1,21 +1,13 @@
 'use client'
 
 import React from "react";
-import { useEffect, useState } from "react";
-import { Category, generateId } from "@/app/utils";
+import { useState } from "react";
+import { Category, generateId, getCategories, getContributions } from "@/app/utils";
 import { FaPlusCircle, FaPencilAlt, FaSave, FaTrashAlt } from "react-icons/fa";
 
 const CategoryEdit: React.FC = () => {
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<Category[]>(getCategories());
     const [newCategoryName, setNewCategoryName] = useState<string>("");
-
-    // get categories from local storage
-    useEffect(() => {
-        const StringifiedCategories = localStorage.getItem("categories");
-        if (StringifiedCategories) {
-            setCategories(JSON.parse(StringifiedCategories))
-        }
-    }, []);
 
     const saveChanges = (newCategoryArray: Category[]): void => {
         setCategories(newCategoryArray);
@@ -45,7 +37,7 @@ const CategoryEdit: React.FC = () => {
 
     const confirmDelete = (timesUsed: number): string => {
         const baseMessage = "Kategorie löschen? "
-        const specificMessage = (timesUsed > 0) ? "Sie ist " + timesUsed + " Kategorien zugewiesen" : "Sie wird aktuell nicht verwendet."
+        const specificMessage = (timesUsed > 0) ? "Sie ist " + timesUsed + " Beiträgen zugewiesen" : "Sie wird aktuell nicht verwendet."
         return baseMessage + specificMessage
     }
 
@@ -62,7 +54,11 @@ const CategoryEdit: React.FC = () => {
                     </button>
                         <button type="button" className="btn" onClick={() => {
                             if (window.confirm(confirmDelete(currentCategory.assignedTo.length))) {
-                                // TODO: Remove reference from assigned contributions
+                                const contributions = getContributions()
+                                contributions.forEach(contribution => {
+                                    contribution.categories = contribution.categories.filter(category => category !== currentCategory.id)
+                                });
+                                localStorage.setItem("contributions", JSON.stringify(contributions));
                                 saveChanges(categories.filter(category => category !== currentCategory));
                             };
                             }}
@@ -78,10 +74,8 @@ const CategoryEdit: React.FC = () => {
                 const newCategoryForm:HTMLElement|null = document.getElementById("newCategoryForm");
                 const newCategoryButton:HTMLElement|null = document.getElementById("newCategoryButton");
                 if (newCategoryForm && newCategoryButton) {
-                    console.log(newCategoryButton)
                     newCategoryForm.style.display = "inline-flex";
                     newCategoryButton.style.display = "none";
-                    console.log(newCategoryButton)
                 }
                 else {
                     throw new Error("CategoryForm or CategoryButton is null")
