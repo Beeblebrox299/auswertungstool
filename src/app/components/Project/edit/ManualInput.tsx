@@ -1,16 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Contribution, generateId, getCategories, getContributions } from "@/app/utils";
+import { FaPlusCircle } from "react-icons/fa";
 
 const ManualInput: React.FC = () => {
-    const [storedContributions, setStoredContributions] = useState<Contribution[]>([]);
+    const [storedContributions, setStoredContributions] = useState<Contribution[]>(getContributions());
     const [inputValues, setInputValues] = useState<Record<string, any>>({});
-    const [categoryId, setCategoryId] = useState<string|null>(null)
+    const [categoryIds, setCategoryIds] = useState<number[]>([0])
     const categories = getCategories()
-
-    useEffect(() => {
-        const contributionArray = getContributions();
-        setStoredContributions(contributionArray);
-    }, [])
 
     const getContributionKeys = (): string[] => {
         const keys = Array.from(new Set(storedContributions.flatMap(Object.keys)));
@@ -28,13 +24,13 @@ const ManualInput: React.FC = () => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (Object.keys(inputValues).length == 0) {
+        if (Object.keys(inputValues).length == 0 && (categoryIds.filter((id) => id !== 0).length === 0)) {
             throw new Error ("No input")
         }
+        setCategoryIds(categoryIds.filter((id) => id !== 0))
         const newContribution: Contribution = {
             ...inputValues,
-            // TODO: Add multi-category support
-            categories: (categoryId) ? JSON.parse(categoryId) : null,
+            categories: categoryIds,
             id: generateId(),
         }
         const newContributionArray = storedContributions.map(contribution => ({ ...contribution }));
@@ -42,13 +38,33 @@ const ManualInput: React.FC = () => {
         localStorage.setItem("contributions", JSON.stringify(newContributionArray));
         setStoredContributions(newContributionArray);   
         setInputValues({});
-    }
+        setCategoryIds([0]);
+    };
+
+    const handleCategoryChange = (target: EventTarget & HTMLSelectElement) => {
+        const index = parseInt(target.id);
+        const newCategoryIds = categoryIds;
+        newCategoryIds[index] = parseInt(target.value);
+        setCategoryIds(newCategoryIds);
+    };
+
+    const getRemainingCategories = (index: number) => {
+        const selectedCategories = categoryIds.slice(0, index).filter(id => id !== 0);
+        return categories.filter(category => !selectedCategories.includes(category.id));
+    };
+
+    const addCategorySelect = (event: React.FormEvent) => {
+        event.preventDefault()
+        if (categoryIds.length < categories.length) {
+            setCategoryIds([...categoryIds, 0])
+        }
+    };
 
     return(
         <div>
             <form onSubmit={handleSubmit}>
                 {contributionKeys.map(key => (
-                    <div key={key}>
+                    key !== "categories" && (<div key={key}>
                         <label>{key}:</label>
                         <input
                             type="text"
@@ -56,13 +72,20 @@ const ManualInput: React.FC = () => {
                             onChange={handleInputChange(key)}
                         />
                     </div>
-                ))}
-                    <select id="categorySelect" defaultValue={"default"} className="info border" onChange={e => setCategoryId(e.target.value)}>
-                        <option value="default">Keine Kategorie</option>
-                        {categories.map((category) => (
+                )))}
+                {categoryIds.map((id, index) => (<>
+                    <select key={id} id={index.toString()} defaultValue={id} className="info border" onChange={e => handleCategoryChange(e.target)}>
+                        <option value="0">Keine Kategorie</option>
+                        {getRemainingCategories(index).map((category) => (
                             <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                     </select>
+                    <br/></>
+                    ))}
+                    <button className="btn" onClick={e => addCategorySelect(e)}>
+                        <span className="icon"><FaPlusCircle/></span>
+                        <span className="btn-label">Weitere Kategorie hinzufügen</span>
+                    </button>
                     <br/>
                 <button className="btn" type="submit">Abschicken</button>
             </form>
