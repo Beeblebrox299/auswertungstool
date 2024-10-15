@@ -11,7 +11,7 @@ const CategoryEdit: React.FC = () => {
 
     const saveChanges = (newCategoryArray: Category[]): void => {
         setCategories(newCategoryArray);
-        localStorage.setItem("categories", JSON.stringify(newCategoryArray))
+        sessionStorage.setItem("categories", JSON.stringify(newCategoryArray))
     }
     
     // Save FormValues to local Storage
@@ -58,7 +58,7 @@ const CategoryEdit: React.FC = () => {
                                 contributions.forEach(contribution => {
                                     contribution.categories = contribution.categories.filter(category => category !== currentCategory.id)
                                 });
-                                localStorage.setItem("contributions", JSON.stringify(contributions));
+                                sessionStorage.setItem("contributions", JSON.stringify(contributions));
                                 saveChanges(categories.filter(category => category !== currentCategory));
                             };
                             }}

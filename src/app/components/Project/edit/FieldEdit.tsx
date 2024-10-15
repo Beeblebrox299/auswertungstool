@@ -23,7 +23,7 @@ const FieldEdit: React.FC = () => {
     });
 
     useEffect(() => {
-        const categories = localStorage.getItem("fields");
+        const categories = sessionStorage.getItem("fields");
         if (categories) {
             const categoryArray = JSON.parse(categories);
             reset({fields: categoryArray.map((category: string) => ({value: category}))})
@@ -42,7 +42,7 @@ const FieldEdit: React.FC = () => {
         // TODO: Do I want to store references to contributions along with the category name? -> Object[] instead of string[]
         // TODO: Check if category already exists (maybe already onChange)
         const categories:string[] = data.fields.map((item) => item.value)
-        localStorage.setItem("fields", JSON.stringify(categories))
+        sessionStorage.setItem("fields", JSON.stringify(categories))
     };
 
     return(

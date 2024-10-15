@@ -10,7 +10,7 @@ const Edit: React.FC = () => {
   const projectExists = useRef<boolean>(true);
 /* funktioniert nur auf dev, muss noch ne Lösung für prod finden
   useMemo(() => {
-      projectExists.current = localStorage.getItem("contributions") !== null || localStorage.getItem("categories") !== null;
+      projectExists.current = sessionStorage.getItem("contributions") !== null || sessionStorage.getItem("categories") !== null;
   }, [])*/
     return (
         <div>
