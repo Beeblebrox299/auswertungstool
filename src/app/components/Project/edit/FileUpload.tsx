@@ -10,7 +10,7 @@ interface PopupProps {
 const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
     const [selected, setSelected] = useState<string>("none");
     const [seperator, setSeperator] = useState<string>("");
-    const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
+    const multiCategoryEnabledString = sessionStorage.getItem("multiCategoryEnabled");
     const multiCategoryEnabled: boolean = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : false
     
     return (
@@ -62,7 +62,7 @@ const FileUpload: React.FC = () => {
         }
     };
 
-    // parse file & update contributions in localStorage
+    // parse file & update contributions in sessionStorage
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         if (file != null) {
@@ -135,8 +135,8 @@ const FileUpload: React.FC = () => {
         });
 
         const storedContributions = getContributions();
-        localStorage.setItem("categories", JSON.stringify(categories));
-        localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
+        sessionStorage.setItem("categories", JSON.stringify(categories));
+        sessionStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
         setMessageText('"' + file.name + '" wurde hochgeladen');
         setCategoryFieldSet(true)
     }

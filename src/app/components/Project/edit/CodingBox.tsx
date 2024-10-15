@@ -33,8 +33,8 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
                 contribution.categories.push(JSON.parse(categoryId))
             }
         });
-        localStorage.setItem("contributions", JSON.stringify(contributionArray))
-        localStorage.setItem("categories", JSON.stringify(categories))
+        sessionStorage.setItem("contributions", JSON.stringify(contributionArray))
+        sessionStorage.setItem("categories", JSON.stringify(categories))
     };
     
     return(
