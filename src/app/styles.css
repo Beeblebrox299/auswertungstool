@@ -554,6 +554,10 @@ video {
   --tw-contain-style:  ;
 }
 
+.inline-flex {
+  display: inline-flex;
+}
+
 .table {
   display: table;
 }
@@ -562,12 +566,28 @@ video {
   display: grid;
 }
 
+.hidden {
+  display: none;
+}
+
 .gap-y-8 {
   row-gap: 2rem;
 }
 
+.border {
+  border-width: 1px;
+}
+
 .pb-5 {
   padding-bottom: 1.25rem;
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.\[key\:string\] {
+  key: string;
 }
 
 body {
@@ -577,6 +597,18 @@ body {
 table, th, td {
   border: 1px dotted black;
   border-collapse: collapse;
+}
+
+h1 {
+  font-size: large;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
+input {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  margin-right: 0.5rem;
 }
 
 /* Button Styling from https://codepen.io/chrisbautista/pen/PoQjYJz */
@@ -614,13 +646,20 @@ table, th, td {
   margin-top: 0.3rem;
   margin-right: 0.5rem;
   margin-left: 0.1rem;
-  border: 0.5px solid lightgray;
+  & .border {
+    border: 0.5px solid lightgray;
+  }
 }
 
-.inputForm {
+.displayBlock {
   border-bottom: 0.5px solid lightgray;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
+  margin-left: 1rem;
+}
+
+.hidden {
+  display: none;
 }
 
 @media (min-width: 768px) {

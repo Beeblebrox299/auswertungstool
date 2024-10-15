@@ -7,7 +7,7 @@ const Graphics: React.FC = () => {
 
     const RenderPieChart = () => {
         return (
-        <PieChart/>
+        <div>This is not a pie chart</div>
     )};
 
     return( 
