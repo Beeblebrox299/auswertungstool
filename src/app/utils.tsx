@@ -17,7 +17,10 @@ export const generateId = ():number => {
 };
 
 export const getContributions = () => {
-    const storedString = sessionStorage.getItem("contributions")
+    let storedString:string|null = null;
+    if (typeof window !== "undefined"){
+        storedString = localStorage.getItem("contributions")
+    };
     let storedArray: Contribution[] = (storedString != null) ? JSON.parse(storedString) : [];
     return storedArray
 };
@@ -32,7 +35,10 @@ export const getContributionsWithoutId = () => {
 };
 
 export const getCategories = () => {
-    const storedString = sessionStorage.getItem("categories")
+    let storedString:string|null = null;
+    if (typeof window !== "undefined"){
+        storedString = localStorage.getItem("categories")
+    };
     let storedArray: Category[] = (storedString != null) ? JSON.parse(storedString) : [];
     return storedArray
 }

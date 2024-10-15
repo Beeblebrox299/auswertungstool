@@ -35,7 +35,9 @@ const ManualInput: React.FC = () => {
         }
         const newContributionArray = storedContributions.map(contribution => ({ ...contribution }));
         newContributionArray.push(newContribution);
-        sessionStorage.setItem("contributions", JSON.stringify(newContributionArray));
+        if (typeof window !== "undefined"){
+            localStorage.setItem("contributions", JSON.stringify(newContributionArray));
+        };
         setStoredContributions(newContributionArray);   
         setInputValues({});
         setCategoryIds([0]);
