@@ -23,26 +23,26 @@ const FieldEdit: React.FC = () => {
     });
 
     useEffect(() => {
-        const fields = localStorage.getItem("fields");
-        if (fields) {
-            const fieldsArray = JSON.parse(fields);
-            reset({fields: fieldsArray.map((field: string) => ({value: field}))})
+        const categories = localStorage.getItem("fields");
+        if (categories) {
+            const categoryArray = JSON.parse(categories);
+            reset({fields: categoryArray.map((category: string) => ({value: category}))})
         }
         else {
             reset({fields:[{value: ""}]})
         }
     }, [reset]);
 
-    const removeField = (index: number) => {
-        // TODO: Check if field is used in at least one contribution. If yes, ask for confirmation before deleting
+    const removeCategory = (index: number) => {
+        // TODO: Check if Category is assigned to at least one contribution. If yes, ask for confirmation before deleting
         remove(index)
     }
 
     const onSubmit = (data: FormValues) => {
-        // TODO: Check if field already exists (maybe already onChange)
-        const fields:string[] = data.fields.map((item) => item.value)
+        // TODO: Check if category already exists (maybe already onChange)
+        const categories:string[] = data.fields.map((item) => item.value)
         if (typeof window !== "undefined"){
-            localStorage.setItem("fields", JSON.stringify(fields))
+            localStorage.setItem("fields", JSON.stringify(categories))
         };
     };
     // TODO: Button fo renaming instead of displaying an input field (like in CategoryEdit)
@@ -64,7 +64,7 @@ const FieldEdit: React.FC = () => {
                     <option value="number">Zahl</option>
                 </select>
                 </span>
-                <button type="button" className="btn info" onClick={() => removeField(index)}>
+                <button type="button" className="btn info" onClick={() => removeCategory(index)}>
                     <span className="icon"><FaTrashAlt/></span>
                     <span className="btn-label">Löschen</span> 
                 </button>
