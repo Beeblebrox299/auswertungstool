@@ -1,4 +1,4 @@
-import React, {useState, useRef} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import { Contribution, Category, generateId, getContributions, getCategories } from "@/app/utils";
 import Papa from "papaparse";
 
@@ -10,8 +10,12 @@ interface PopupProps {
 const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
     const [selected, setSelected] = useState<string>("none");
     const [seperator, setSeperator] = useState<string>("");
-    const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
-    const multiCategoryEnabled: boolean = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : false
+    let multiCategoryEnabled = useRef(false)
+
+    useEffect(() => {
+        const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
+        multiCategoryEnabled.current = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : false
+    });
     
     return (
         <div>
@@ -24,7 +28,7 @@ const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
                     </option>
                 ))}
             </select>
-            {multiCategoryEnabled && (<>
+            {multiCategoryEnabled.current && (<>
                 <h2>Durch welches Zeichen sind die Kategorien getrennt?</h2>
                 <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
                     <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
@@ -135,10 +139,12 @@ const FileUpload: React.FC = () => {
         });
 
         const storedContributions = getContributions();
-        localStorage.setItem("categories", JSON.stringify(categories));
-        localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
-        setMessageText('"' + file.name + '" wurde hochgeladen');
-        setCategoryFieldSet(true)
+        if (typeof window !== "undefined"){
+            localStorage.setItem("categories", JSON.stringify(categories));
+            localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
+            setMessageText('"' + file.name + '" wurde hochgeladen');
+            setCategoryFieldSet(true)
+        }
     }
 
     return(
