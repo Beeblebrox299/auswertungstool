@@ -39,14 +39,13 @@ const FieldEdit: React.FC = () => {
     }
 
     const onSubmit = (data: FormValues) => {
-        // TODO: Do I want to store references to contributions along with the category name? -> Object[] instead of string[]
         // TODO: Check if category already exists (maybe already onChange)
         const categories:string[] = data.fields.map((item) => item.value)
         if (typeof window !== "undefined"){
             localStorage.setItem("fields", JSON.stringify(categories))
         };
     };
-
+    // TODO: Button fo renaming instead of displaying an input field (like in CategoryEdit)
     return(
         <form onSubmit={handleSubmit(onSubmit)} className="displayBlock">
             <h1>Datenfelder</h1>

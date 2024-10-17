@@ -39,6 +39,8 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
         }
     };
     
+    // TODO: Feld "categories" nicht anzeigen
+    // TODO: Multi-Category
     return(
         <div className="displayBlock">
             <span className="info">
