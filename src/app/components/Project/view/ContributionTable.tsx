@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { getCategories, getContributions } from "@/app/utils";
 
 const ContributionTable: React.FC = () => {
-    const [contributions, setContributions] = useState<Record<string, any>[]>([])
+    const [contributions, setContributions] = useState<Record<string, any>[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
     useEffect(() => {
         const contributionArray = getContributions()
         const categoryArray = getCategories()
@@ -20,8 +22,13 @@ const ContributionTable: React.FC = () => {
             delete contribution.categories;
         });
         setContributions(contributionContentArray);
+        setLoading(false);
     }, [])
     const contributionKeys:string[] = Array.from(new Set(contributions.flatMap(Object.keys)));
+
+    if (loading) {
+        return(<></>)
+    }
 
     return(
         <div>
