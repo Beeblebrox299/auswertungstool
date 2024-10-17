@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Head from "next/head";
 import "./styles.css";
 import Navbar from "./components/Navigation/Navbar";
 
@@ -15,6 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de">
+      <Head>
+        <meta httpEquiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" /> 
+        {/*FIXME: Security is not a concern right now, but this should be changed if it is */}
+      </Head>
       <body>
         <Navbar/>
         {children}
