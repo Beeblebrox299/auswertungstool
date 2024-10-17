@@ -1,13 +1,17 @@
 'use client'
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { Category, generateId, getCategories, getContributions } from "@/app/utils";
 import { FaPlusCircle, FaPencilAlt, FaSave, FaTrashAlt } from "react-icons/fa";
 
 const CategoryEdit: React.FC = () => {
-    const [categories, setCategories] = useState<Category[]>(getCategories());
+    const [categories, setCategories] = useState<Category[]>([]);
     const [newCategoryName, setNewCategoryName] = useState<string>("");
+
+    useEffect(() => {
+        setCategories(getCategories())
+    },[])
 
     const saveChanges = (newCategoryArray: Category[]): void => {
         setCategories(newCategoryArray);
@@ -33,8 +37,13 @@ const CategoryEdit: React.FC = () => {
     };
 
     const editCategoryName = (index: number): void =>{
-        // TODO: Edit Name
-        throw new Error("Function not implemented.");
+        const newName = window.prompt("Geben Sie den neuen Namen ein", categories[index].name);
+        if (newName == "" || newName == null) {
+            throw new Error("Category name cannot be empty")
+        };
+        const newCategoryArray = Array.from(categories);
+        newCategoryArray[index].name = newName;
+        saveChanges(newCategoryArray);
     };
 
     const confirmDelete = (timesUsed: number): string => {
