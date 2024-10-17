@@ -19,7 +19,7 @@ const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
     
     return (
         <div>
-            <h2>In welchem Feld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
+            <h2 className="info">In welchem Feld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
             <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
                 <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
                 {fields.map((field) => (
@@ -27,14 +27,14 @@ const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
                         {field}
                     </option>
                 ))}
-            </select>
-            {multiCategoryEnabled.current && (<>
-                <h2>Durch welches Zeichen sind die Kategorien getrennt?</h2>
+            </select><br/>
+            {(multiCategoryEnabled.current && selected !== "none") && (<>
+                <h2 className="info">Durch welches Zeichen sind die Kategorien getrennt?</h2>
                 <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
                     <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
                     <option value=";"> ; </option>
                     {/* TODO: Add more options and let user input custom seperator value */}
-                </select></>
+                </select><br/></>
             )}  
             <button className="btn" onClick={() => onSelect(selected, seperator)}>OK</button>
         </div>
@@ -142,6 +142,7 @@ const FileUpload: React.FC = () => {
         if (typeof window !== "undefined"){
             localStorage.setItem("categories", JSON.stringify(categories));
             localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
+            localStorage.setItem("fields", JSON.stringify(fields));
             setMessageText('"' + file.name + '" wurde hochgeladen');
             setCategoryFieldSet(true)
         }
