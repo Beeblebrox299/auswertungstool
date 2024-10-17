@@ -1,12 +1,17 @@
-import { useState } from "react";
-import { Contribution, generateId, getCategories, getContributions } from "@/app/utils";
+import { useEffect, useState } from "react";
+import { Category, Contribution, generateId, getCategories, getContributions } from "@/app/utils";
 import { FaPlusCircle } from "react-icons/fa";
 
 const ManualInput: React.FC = () => {
-    const [storedContributions, setStoredContributions] = useState<Contribution[]>(getContributions());
+    const [storedContributions, setStoredContributions] = useState<Contribution[]>([]);
     const [inputValues, setInputValues] = useState<Record<string, any>>({});
     const [categoryIds, setCategoryIds] = useState<number[]>([0])
-    const categories = getCategories()
+    const [categories, setCategories] = useState<Category[]>([])
+
+    useEffect(() => {
+        setStoredContributions(getContributions());
+        setCategories(getCategories())
+    }, []);
 
     const getContributionKeys = (): string[] => {
         const keys = Array.from(new Set(storedContributions.flatMap(Object.keys)));
@@ -66,7 +71,8 @@ const ManualInput: React.FC = () => {
         <div>
             <form onSubmit={handleSubmit}>
                 {contributionKeys.map(key => (
-                    key !== "categories" && (<div key={key}>
+                    key !== "categories" && (
+                    <div key={key}>
                         <label>{key}:</label>
                         <input
                             type="text"
@@ -75,14 +81,14 @@ const ManualInput: React.FC = () => {
                         />
                     </div>
                 )))}
-                {categoryIds.map((id, index) => (<>
+                {categoryIds.map((id, index) => ( <div key={index}>
                     <select key={id} id={index.toString()} defaultValue={id} className="info border" onChange={e => handleCategoryChange(e.target)}>
                         <option value="0">Keine Kategorie</option>
                         {getRemainingCategories(index).map((category) => (
                             <option key={category.id} value={category.id}>{category.name}</option>
                         ))}
                     </select>
-                    <br/></>
+                    <br/></div>
                     ))}
                     <button className="btn" onClick={e => addCategorySelect(e)}>
                         <span className="icon"><FaPlusCircle/></span>
