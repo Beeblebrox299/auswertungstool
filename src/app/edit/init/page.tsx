@@ -6,8 +6,7 @@ import FieldEdit from "@/app/components/Project/edit/FieldEdit";
 import FileUpload from "@/app/components/Project/edit/FileUpload";
 
 /*
-TODO: Add input for fields. Make the distinction between categories and fields very clear.
-TODO: Can a contribution have more than one category?
+TODO: Make the distinction between categories and fields clearer.
 */
 
 const Init: React.FC = () => {
