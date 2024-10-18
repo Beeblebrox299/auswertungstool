@@ -17,7 +17,7 @@ const ContributionTable: React.FC = () => {
                 const categoryNames = categories.map(category => "- " + category.name)
                 return categoryNames.join("\n")
             }
-            contribution.Kategorie = getCategoryNames();
+            contribution.Kategorien = getCategoryNames();
             delete contribution.id;
             delete contribution.categories;
         });
@@ -37,7 +37,7 @@ const ContributionTable: React.FC = () => {
                     <thead>
                         <tr>
                             {contributionKeys.map((key) => (
-                                <th key={key}>{key === "category" ? "Kategorie" : key}</th>
+                                <th key={key}>{key}</th>
                             ))}
                         </tr>
                     </thead>
