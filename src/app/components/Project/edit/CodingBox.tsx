@@ -1,36 +1,40 @@
 import { getCategories, Category, Contribution } from "@/app/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: Contribution[]}> = ({contributionWithId, contributionArray}) => {
-    const [categoryId, setCategoryId] = useState<string|null>(null)
+    const [categoryIds, setCategoryIds] = useState<number[]>([]);
+    const [categories, setCategories] = useState<Category[]>([])
     
     const contributionContent: Record<string, any> = {...contributionWithId};
     delete contributionContent.id;
-    delete contributionContent.category;
+    delete contributionContent.categories;
 
     const contributionKeys: string[] = Object.keys(contributionContent);
-    const categories: Category[] = getCategories();
+
+    useEffect(() => {
+        setCategories(getCategories());
+    },[])
 
     const setDefault = () => {
-        if (!contributionContent.category) {
+        if (!contributionContent.categories) {
             return "default"
         }
-        return contributionContent.category
+        return contributionContent.categories
     };
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (!categoryId) {
+        if (!categoryIds) {
             throw new Error("CategoryId empty")
         }
         categories.forEach(category => {
-            if (category.id === JSON.parse(categoryId)) {
+            if (categoryIds.includes(category.id)) {
                 category.assignedTo.push(contributionWithId.id)
             }
         });
         contributionArray.forEach(contribution => {
             if (contribution.id === contributionWithId.id) {
-                contribution.categories.push(JSON.parse(categoryId))
+                contribution.categories = [...contribution.categories, ...categoryIds];
             }
         });
         if (typeof window !== "undefined"){
@@ -39,16 +43,16 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
         }
     };
     
-    // TODO: Feld "categories" nicht anzeigen
+    // TODO: Beitrag nach Speichern / Bestätigen ausblenden (mit "confirmed" bool o. Ä.)
     // TODO: Multi-Category
     return(
         <div className="displayBlock">
             <span className="info">
                 {contributionKeys.map((key) => (
-                    <div className="info border" key={key}><b>{key}:</b> <br/>{contributionContent[key]}</div>
+                    <div className="info border" style={{whiteSpace: "pre-wrap"}} key={key}><b>{key}:</b> <br/>{contributionContent[key]}</div>
                 ))}
                 <form onSubmit={e => handleSubmit(e)}>
-                    <select id="categorySelect" defaultValue={setDefault()} className="info border" onChange={e => setCategoryId(e.target.value)}>
+                    <select id="categorySelect" defaultValue={setDefault()} className="info border" onChange={e => setCategoryIds([...categoryIds, parseInt(e.target.value)])}>
                         <option disabled value="default">Kategorie auswählen...</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}>{category.name}</option>
