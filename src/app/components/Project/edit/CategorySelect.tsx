@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Category } from "@/app/utils";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 
 const CategorySelect: React.FC<{onCategorySelect(categoryIds: number[]): void, initialCategoryIds: number[], categories: Category[]}> = ({onCategorySelect, initialCategoryIds, categories}) => {
     
@@ -19,7 +19,8 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds: number[]): void, i
     };
 
     const getRemainingCategories = (index: number) => {
-        const selectedCategories = categoryIds.slice(0, index).filter(id => id !== 0);
+        const selectedCategories = [...categoryIds];
+        selectedCategories.splice(index, 1);
         return categories.filter(category => !selectedCategories.includes(category.id));
     };
 
@@ -40,6 +41,14 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds: number[]): void, i
                 <option key={category.id} value={category.id.toString()}>{category.name}</option>
             ))}
         </select>
+        <button type="button" className="btn" onClick={() => {
+                const updatedCategoryIds = categoryIds.filter((_, idx) => idx != index);
+                setCategoryIds(updatedCategoryIds);
+                onCategorySelect(categoryIds);
+            }}
+        >
+        <span className="icon"><FaMinusCircle/></span>
+        </button>
         <br/></div>
         ))}
         {(categoryIds.length < categories.length) ? (<><button className="btn" onClick={(e => addCategorySelect(e))}>
