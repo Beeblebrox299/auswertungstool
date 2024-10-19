@@ -14,14 +14,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
 
     useEffect(() => {
         setCategories(getCategories());
-    },[])
-
-    const setDefault = () => {
-        if (!contributionContent.categories) {
-            return "default"
-        }
-        return contributionContent.categories
-    };
+    },[]);
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -35,7 +28,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
         });
         contributionArray.forEach(contribution => {
             if (contribution.id === contributionWithId.id) {
-                contribution.categories = [...contribution.categories, ...categoryIds];
+                contribution.categories = categoryIds;
             }
         });
         if (typeof window !== "undefined"){
@@ -45,7 +38,6 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
     };
     
     // TODO: Beitrag nach Speichern / Bestätigen ausblenden (mit "confirmed" bool o. Ä.)
-    // TODO: Multi-Category
     return(
         <div className="displayBlock">
             <span className="info">
