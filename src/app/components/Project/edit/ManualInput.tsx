@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Category, Contribution, generateId, getCategories, getContributions } from "@/app/utils";
 import { FaPlusCircle } from "react-icons/fa";
+import CategorySelect from "./CategorySelect";
 
 const ManualInput: React.FC = () => {
     const [storedContributions, setStoredContributions] = useState<Contribution[]>([]);
@@ -48,25 +49,6 @@ const ManualInput: React.FC = () => {
         setCategoryIds([0]);
     };
 
-    const handleCategoryChange = (target: EventTarget & HTMLSelectElement) => {
-        const index = parseInt(target.id);
-        const newCategoryIds = categoryIds;
-        newCategoryIds[index] = parseInt(target.value);
-        setCategoryIds(newCategoryIds);
-    };
-
-    const getRemainingCategories = (index: number) => {
-        const selectedCategories = categoryIds.slice(0, index).filter(id => id !== 0);
-        return categories.filter(category => !selectedCategories.includes(category.id));
-    };
-
-    const addCategorySelect = (event: React.FormEvent) => {
-        event.preventDefault()
-        if (categoryIds.length < categories.length) {
-            setCategoryIds([...categoryIds, 0])
-        }
-    };
-
     return(
         <div>
             <form onSubmit={handleSubmit}>
@@ -81,20 +63,11 @@ const ManualInput: React.FC = () => {
                         />
                     </div>
                 )))}
-                {categoryIds.map((id, index) => ( <div key={index}>
-                    <select key={id} id={index.toString()} defaultValue={id} className="info border" onChange={e => handleCategoryChange(e.target)}>
-                        <option value="0">Keine Kategorie</option>
-                        {getRemainingCategories(index).map((category) => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
-                    </select>
-                    <br/></div>
-                    ))}
-                    <button className="btn" onClick={e => addCategorySelect(e)}>
-                        <span className="icon"><FaPlusCircle/></span>
-                        <span className="btn-label">Weitere Kategorie hinzufügen</span>
-                    </button>
-                    <br/>
+                <CategorySelect
+                    onCategorySelect={(newCategoryIds) => {setCategoryIds(newCategoryIds)}}
+                    initialCategoryIds={categoryIds}
+                    categories={categories}
+                    />
                 <button className="btn" type="submit">Abschicken</button>
             </form>
         </div>

@@ -1,8 +1,9 @@
 import { getCategories, Category, Contribution } from "@/app/utils";
 import React, { useEffect, useState } from "react";
+import CategorySelect from "./CategorySelect";
 
 const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: Contribution[]}> = ({contributionWithId, contributionArray}) => {
-    const [categoryIds, setCategoryIds] = useState<number[]>([]);
+    const [categoryIds, setCategoryIds] = useState<number[]>(contributionWithId.categories);
     const [categories, setCategories] = useState<Category[]>([])
     
     const contributionContent: Record<string, any> = {...contributionWithId};
@@ -52,12 +53,11 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
                     <div className="info border" style={{whiteSpace: "pre-wrap"}} key={key}><b>{key}:</b> <br/>{contributionContent[key]}</div>
                 ))}
                 <form onSubmit={e => handleSubmit(e)}>
-                    <select id="categorySelect" defaultValue={setDefault()} className="info border" onChange={e => setCategoryIds([...categoryIds, parseInt(e.target.value)])}>
-                        <option disabled value="default">Kategorie auswählen...</option>
-                        {categories.map((category) => (
-                            <option key={category.id} value={category.id}>{category.name}</option>
-                        ))}
-                    </select>
+                    <CategorySelect
+                    onCategorySelect={(newCategoryIds) => {setCategoryIds(newCategoryIds)}}
+                    initialCategoryIds={categoryIds}
+                    categories={categories}
+                    />
                     <button className="btn" type="submit">Speichern</button>
                 </form>
             </span>
