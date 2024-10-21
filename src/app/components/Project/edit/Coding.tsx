@@ -19,11 +19,13 @@ const Coding: React.FC = () => {
     return(
         <div className="displayBlock">
            {contributions.length > 0 ? (
-                <span>
-                    {contributions.map((contribution, index) => (
-                        <CodingBox key={index} contributionWithId={contribution} contributionArray={contributions}/>
-                    ))}
-                </span>
+                <div>
+                    {contributions.map((contribution, index) => 
+                        <div key={index}> 
+                            {(!contribution.categories_confirmed ? <CodingBox contributionWithId={contribution} contributionArray={contributions}/> : <></>)}
+                        </div>
+                    )}
+                </div>
             ) : (   
                 <p>Keine Beiträge vorhanden.</p>
             )}

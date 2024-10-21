@@ -2,6 +2,7 @@ export interface Contribution {
     id: number,
     categories: number[],
     [key:string]: any,
+    categories_confirmed: boolean,
 }
 
 export interface Category {

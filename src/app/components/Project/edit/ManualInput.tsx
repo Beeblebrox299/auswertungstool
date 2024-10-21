@@ -16,7 +16,7 @@ const ManualInput: React.FC = () => {
 
     const getContributionKeys = (): string[] => {
         const keys = Array.from(new Set(storedContributions.flatMap(Object.keys)));
-        return keys.filter(item => !["id", "category"].includes(item))
+        return keys.filter(item => !["id", "categories", "categories_confirmed"].includes(item))
     }
 
     const contributionKeys = getContributionKeys();
@@ -38,6 +38,7 @@ const ManualInput: React.FC = () => {
             ...inputValues,
             categories: categoryIds,
             id: generateId(),
+            categories_confirmed: false,
         }
         const newContributionArray = storedContributions.map(contribution => ({ ...contribution }));
         newContributionArray.push(newContribution);
@@ -53,7 +54,6 @@ const ManualInput: React.FC = () => {
         <div>
             <form onSubmit={handleSubmit}>
                 {contributionKeys.map(key => (
-                    key !== "categories" && (
                     <div key={key}>
                         <label>{key}:</label>
                         <input
@@ -62,9 +62,9 @@ const ManualInput: React.FC = () => {
                             onChange={handleInputChange(key)}
                         />
                     </div>
-                )))}
+                ))}
                 <CategorySelect
-                    onCategorySelect={(newCategoryIds) => {setCategoryIds(newCategoryIds)}}
+                    onCategorySelect={(newCategoryIds) => {if (newCategoryIds) setCategoryIds(newCategoryIds)}}
                     initialCategoryIds={categoryIds}
                     categories={categories}
                     />

@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import CategorySelect from "./CategorySelect";
 
 const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: Contribution[]}> = ({contributionWithId, contributionArray}) => {
-    const [categoryIds, setCategoryIds] = useState<number[]>(contributionWithId.categories);
-    const [categories, setCategories] = useState<Category[]>([])
-    
     const contributionContent: Record<string, any> = {...contributionWithId};
+    const [categoryIds, setCategoryIds] = useState<number[]>(contributionContent.categories);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [ wasChanged, setWasChanged ] = useState<boolean>(false);
+    
     delete contributionContent.id;
     delete contributionContent.categories;
+    delete contributionContent.categories_confirmed;
 
     const contributionKeys: string[] = Object.keys(contributionContent);
 
@@ -28,6 +30,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
         });
         contributionArray.forEach(contribution => {
             if (contribution.id === contributionWithId.id) {
+                contribution.categories_confirmed = true;
                 contribution.categories = categoryIds;
             }
         });
@@ -36,8 +39,19 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
             localStorage.setItem("categories", JSON.stringify(categories))
         }
     };
+
+    const handleCategoryChange = (newCategoryIds?: number[]) => {
+        if (newCategoryIds) {
+            setCategoryIds(newCategoryIds); 
+        };
+        setWasChanged(true);
+    }
+
+    const handleReset = () => {
+        setCategoryIds(contributionWithId.categories); 
+        setWasChanged(false);
+    };
     
-    // TODO: Beitrag nach Speichern / Bestätigen ausblenden (mit "confirmed" bool o. Ä.)
     return(
         <div className="displayBlock">
             <span className="info">
@@ -46,11 +60,12 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
                 ))}
                 <form onSubmit={e => handleSubmit(e)}>
                     <CategorySelect
-                    onCategorySelect={(newCategoryIds) => {setCategoryIds(newCategoryIds)}}
+                    onCategorySelect={(newCategoryIds) => handleCategoryChange(newCategoryIds)}
                     initialCategoryIds={categoryIds}
                     categories={categories}
                     />
-                    <button className="btn" type="submit">Speichern</button>
+                    <button className="btn" type="submit">{(wasChanged) ? "Speichern" : "Bestätigen"}</button>
+                    {(wasChanged) ? (<button className="btn" onClick={handleReset}>Zurücksetzen</button>) : <></>} {/* FIXME: Only works sometimes, haven't figured out the cause */}
                 </form>
             </span>
         </div>

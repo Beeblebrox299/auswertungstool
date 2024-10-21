@@ -97,6 +97,7 @@ const FileUpload: React.FC = () => {
 
         data.forEach((contribution: Contribution) => {
             contribution.id = generateId();
+            contribution.categories_confirmed = false;
             contribution.categories = [];
             // Check if Contribution has selected key. If so, convert to category field
             if (Object.keys(contribution).includes(selectedField)) {

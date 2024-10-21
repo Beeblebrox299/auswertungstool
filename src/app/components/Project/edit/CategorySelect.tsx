@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Category } from "@/app/utils";
 import { FaMinusCircle, FaPlusCircle } from "react-icons/fa";
 
-const CategorySelect: React.FC<{onCategorySelect(categoryIds: number[]): void, initialCategoryIds: number[], categories: Category[]}> = ({onCategorySelect, initialCategoryIds, categories}) => {
+const CategorySelect: React.FC<{onCategorySelect(categoryIds?: number[]): void, initialCategoryIds: number[], categories: Category[]}> = ({onCategorySelect, initialCategoryIds, categories}) => {
     
     const [categoryIds, setCategoryIds] = useState<number[]>(initialCategoryIds)
+
+    useEffect(() => {
+        setCategoryIds(initialCategoryIds);
+    }, [initialCategoryIds]);
 
     if (categoryIds.length === 0) {
         setCategoryIds([0]);
@@ -14,8 +18,7 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds: number[]): void, i
         const index = parseInt(target.id);
         const newCategoryIds = categoryIds;
         newCategoryIds[index] = parseInt(target.value);
-        setCategoryIds(newCategoryIds);
-        onCategorySelect(categoryIds);
+        onCategorySelect(newCategoryIds);
     };
 
     const getRemainingCategories = (index: number) => {
@@ -43,15 +46,14 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds: number[]): void, i
         </select>
         <button type="button" className="btn" onClick={() => {
                 const updatedCategoryIds = categoryIds.filter((_, idx) => idx != index);
-                setCategoryIds(updatedCategoryIds);
-                onCategorySelect(categoryIds);
+                onCategorySelect(updatedCategoryIds);
             }}
         >
         <span className="icon"><FaMinusCircle/></span>
         </button>
         <br/></div>
         ))}
-        {(categoryIds.length < categories.length) ? (<><button className="btn" onClick={(e => addCategorySelect(e))}>
+        {(categoryIds.length < categories.length) ? (<><button className="btn" onClick={(e => {addCategorySelect(e); onCategorySelect()})}>
             <span className="icon"><FaPlusCircle/></span>
             <span className="btn-label">Weitere Kategorie hinzufügen</span>
         </button>
