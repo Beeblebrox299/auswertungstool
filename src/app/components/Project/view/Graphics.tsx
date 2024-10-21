@@ -5,6 +5,8 @@ const Graphics: React.FC = () => {
     const categories = getCategories();
     const contributions = getContributions();
 
+    //TODO: Make graphs
+
     const RenderPieChart = () => {
         return (
         <div>This is not a pie chart</div>

@@ -46,6 +46,7 @@ const FieldEdit: React.FC = () => {
         };
     };
     // TODO: Button fo renaming instead of displaying an input field (like in CategoryEdit)
+    // TODO: Ask for type of field (text, number, one of x options...) and store them for better manual input and visualisation
     return(
         <form onSubmit={handleSubmit(onSubmit)} className="displayBlock">
             <h1>Datenfelder</h1>
