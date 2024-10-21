@@ -44,13 +44,13 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds?: number[]): void, 
                 <option key={category.id} value={category.id.toString()}>{category.name}</option>
             ))}
         </select>
-        <button type="button" className="btn" onClick={() => {
+        {(index > 0) ? <button type="button" className="btn" onClick={() => {
                 const updatedCategoryIds = categoryIds.filter((_, idx) => idx != index);
                 onCategorySelect(updatedCategoryIds);
             }}
         >
         <span className="icon"><FaMinusCircle/></span>
-        </button>
+        </button> : <></>}
         <br/></div>
         ))}
         {(categoryIds.length < categories.length) ? (<><button className="btn" onClick={(e => {addCategorySelect(e); onCategorySelect()})}>
