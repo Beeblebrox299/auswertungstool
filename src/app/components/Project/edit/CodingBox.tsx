@@ -2,7 +2,7 @@ import { getCategories, Category, Contribution } from "@/app/utils";
 import React, { useEffect, useState } from "react";
 import CategorySelect from "./CategorySelect";
 
-const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: Contribution[]}> = ({contributionWithId, contributionArray}) => {
+const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: Contribution[], onSave(): void}> = ({contributionWithId, contributionArray, onSave}) => {
     const contributionContent: Record<string, any> = {...contributionWithId};
     const [categoryIds, setCategoryIds] = useState<number[]>(contributionContent.categories);
     const [categories, setCategories] = useState<Category[]>([]);
@@ -20,9 +20,6 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (!categoryIds) {
-            throw new Error("CategoryId empty")
-        }
         categories.forEach(category => {
             if (categoryIds.includes(category.id)) {
                 category.assignedTo.push(contributionWithId.id)
@@ -38,6 +35,8 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
             localStorage.setItem("contributions", JSON.stringify(contributionArray))
             localStorage.setItem("categories", JSON.stringify(categories))
         }
+        else throw new Error("window undefined");
+        onSave();
     };
 
     const handleCategoryChange = (newCategoryIds?: number[]) => {

@@ -12,6 +12,12 @@ const Coding: React.FC = () => {
         setLoading(false);
     }, []);
 
+    const onSave = (index: number) => {
+        const contributionArray = [...contributions];
+        contributionArray[index].categories_confirmed = true;
+        setContributions(contributionArray);
+    }
+
     if (loading) {
         return(<></>)
     };
@@ -22,7 +28,7 @@ const Coding: React.FC = () => {
                 <div>
                     {contributions.map((contribution, index) => 
                         <div key={index}> 
-                            {(!contribution.categories_confirmed ? <CodingBox contributionWithId={contribution} contributionArray={contributions}/> : <></>)}
+                            {(!contribution.categories_confirmed ? <CodingBox contributionWithId={contribution} contributionArray={contributions} onSave={() => onSave(index)}/> : <></>)}
                         </div>
                     )}
                 </div>
