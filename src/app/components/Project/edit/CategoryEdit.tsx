@@ -80,7 +80,18 @@ const CategoryEdit: React.FC = () => {
                         <span className="icon"><FaPencilAlt/></span>
                         <span className="btn-label">Umbenennen</span>
                     </button>
-                        <button type="button" className="btn" onClick={() => toggleNewCategoryForm(true)}
+                        <button type="button" className="btn" onClick={() => {
+                            if (window.confirm(confirmDelete(currentCategory.assignedTo.length))) {
+                                const contributions = getContributions()
+                                contributions.forEach(contribution => {
+                                    contribution.categories = contribution.categories.filter(category => category !== currentCategory.id)
+                                });
+                                if (typeof window !== "undefined"){
+                                    localStorage.setItem("contributions", JSON.stringify(contributions));
+                                };
+                                saveChanges(categories.filter(category => category !== currentCategory));
+                            };
+                            }}
                         >
                         <span className="icon"><FaTrashAlt/></span>
                         <span className="btn-label">Löschen</span> 
@@ -89,18 +100,7 @@ const CategoryEdit: React.FC = () => {
             ))}
             <div>
             <div id="newCategoryButton" className="info">
-            <button type="button" className="btn" onClick={() => {
-                const newCategoryForm:HTMLElement|null = document.getElementById("newCategoryForm");
-                const newCategoryButton:HTMLElement|null = document.getElementById("newCategoryButton");
-                if (newCategoryForm && newCategoryButton) {
-                    newCategoryForm.style.display = "inline-flex";
-                    newCategoryButton.style.display = "none";
-                }
-                else {
-                    throw new Error("CategoryForm or CategoryButton is null")
-                }
-                }}
-            >
+            <button type="button" className="btn" onClick={() => toggleNewCategoryForm(true)}>
                 <span className="icon"><FaPlusCircle/></span>
                 <span className="btn-label">Neue Kategorie hinzufügen</span>
             </button>
@@ -118,8 +118,16 @@ const CategoryEdit: React.FC = () => {
             </button>
             <button className="btn" onClick={(event) => {
                 event.preventDefault();
-                toggleNewCategoryForm(false)
-            }}>
+                const newCategoryForm:HTMLElement|null = document.getElementById("newCategoryForm");
+                const newCategoryButton:HTMLElement|null = document.getElementById("newCategoryButton");
+                if (newCategoryForm && newCategoryButton) {
+                    newCategoryButton.style.display = "inline-flex";
+                    newCategoryForm.style.display = "none";
+                }
+                else {
+                    throw new Error("CategoryForm or CategoryButton is null")
+                }
+                }}>
                 <span className="icon"><FaTimesCircle/></span>
                 <span className="btn-label">Abbrechen</span>
             </button>
