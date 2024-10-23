@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCategories, getContributions } from "@/app/utils";
+import { getCategories, getContributions, getFields } from "@/app/utils";
 
 const ContributionTable: React.FC = () => {
     const [contributions, setContributions] = useState<Record<string, any>[]>([]);
@@ -23,8 +23,9 @@ const ContributionTable: React.FC = () => {
         });
         setContributions(contributionContentArray);
         setLoading(false);
-    }, [])
-    const contributionKeys:string[] = Array.from(new Set(contributions.flatMap(Object.keys)));
+    }, []);
+
+    const fields = getFields();
 
     if (loading) {
         return(<></>)
@@ -36,19 +37,21 @@ const ContributionTable: React.FC = () => {
                 <table>
                     <thead>
                         <tr>
-                            {contributionKeys.map((key) => (
-                                <th key={key}>{key}</th>
+                            {fields.map((field) => (
+                                <th key={field.id}>{field.name}</th>
                             ))}
+                            <th key="categories">Kategorie(n)</th>
                         </tr>
                     </thead>
                     <tbody>
                         {contributions.map((contribution, index) => (
                             <tr key={index}>
-                                {contributionKeys.map((key) => (
-                                    <td style={{whiteSpace: "pre-wrap"}} key={key}>
-                                        {contribution[key] !== undefined ? contribution[key] : 'N/A'}
+                                {fields.map((field) => (
+                                    <td style={{whiteSpace: "pre-wrap"}} key={field.id}>
+                                        {contribution[field.id] !== undefined ? contribution[field.id] : 'N/A'}
                                     </td>
                                 ))}
+                                <td key="categories" style={{whiteSpace: "pre-wrap"}}>{contribution.Kategorien}</td>
                             </tr>
                         ))}
                     </tbody>

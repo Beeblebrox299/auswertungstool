@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Category, Contribution, generateId, getCategories, getContributions } from "@/app/utils";
+import { Category, Contribution, generateId, getCategories, getContributions, getFields } from "@/app/utils";
 import { FaPlusCircle } from "react-icons/fa";
 import CategorySelect from "./CategorySelect";
 
@@ -14,14 +14,9 @@ const ManualInput: React.FC = () => {
         setCategories(getCategories())
     }, []);
 
-    const getContributionKeys = (): string[] => {
-        const keys = Array.from(new Set(storedContributions.flatMap(Object.keys)));
-        return keys.filter(item => !["id", "categories", "categories_confirmed"].includes(item))
-    }
+    const fields = getFields();
 
-    const contributionKeys = getContributionKeys();
-
-    const handleInputChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (key: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValues(inputValues => ({
             ...inputValues,
             [key]: event.target.value,
@@ -53,13 +48,13 @@ const ManualInput: React.FC = () => {
     return(
         <div>
             <form onSubmit={handleSubmit}>
-                {contributionKeys.map(key => (
-                    <div key={key}>
-                        <label>{key}:</label>
+                {fields.map(field => (
+                    <div key={field.id}>
+                        <label>{field.name}:</label>
                         <input
                             type="text"
-                            value={inputValues[key] || ''}
-                            onChange={handleInputChange(key)}
+                            value={inputValues[field.id] || ''}
+                            onChange={handleInputChange(field.id)}
                         />
                     </div>
                 ))}

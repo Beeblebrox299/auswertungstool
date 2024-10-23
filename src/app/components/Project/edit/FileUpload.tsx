@@ -105,23 +105,30 @@ const FileUpload: React.FC = () => {
             throw new Error("no file selected");
         };
 
+        const fieldsWithoutCategory = fields.filter(field => field.name !== selectedField);
         const categories = getCategories();
+        const contributions: Contribution[] = [];
 
-        data.forEach((contribution: Contribution) => {
-            contribution.id = generateId();
-            contribution.categories_confirmed = false;
-            contribution.categories = [];
+        data.forEach((contributionFromData: Contribution) => {
+            const contribution: Contribution = {
+                id: generateId(),
+                categories: [],
+                categories_confirmed: false,
+            }; 
+            fieldsWithoutCategory.forEach(field => {
+                if (contributionFromData[field.name]) contribution[field.id] = contributionFromData[field.name];
+            });
             // Check if Contribution has selected key. If so, convert to category field
-            if (Object.keys(contribution).includes(selectedField)) {
+            if (Object.keys(contributionFromData).includes(selectedField)) {
                 let categoryNames: string[]
                 if (seperator) {
-                    categoryNames = contribution[selectedField].split(seperator);
+                    categoryNames = contributionFromData[selectedField].split(seperator);
                     categoryNames = categoryNames.filter ((item) => {
                         return item !== ""
                     })
                 }
                 else {
-                    categoryNames = [contribution[selectedField]]
+                    categoryNames = [contributionFromData[selectedField]]
                 };
 
                 categoryNames.forEach(categoryName => {
@@ -147,15 +154,15 @@ const FileUpload: React.FC = () => {
                         categories.push(newCategory);
                     }
                 });
-                delete contribution[selectedField];
-            }
+            };
+            contributions.push(contribution);
         });
 
         const storedContributions = getContributions();
         if (typeof window !== "undefined"){
             localStorage.setItem("categories", JSON.stringify(categories));
-            localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
-            localStorage.setItem("fields", JSON.stringify(fields.filter(field => field.name !== selectedField)));
+            localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...contributions]));
+            localStorage.setItem("fields", JSON.stringify(fieldsWithoutCategory));
             setMessageText('"' + file.name + '" wurde hochgeladen');
             setCategoryFieldSet(true)
         }
