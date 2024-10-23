@@ -106,31 +106,23 @@ const CategoryEdit: React.FC = () => {
             </button>
             </div>
             <form id="newCategoryForm" className="hidden" onSubmit={e => handleSubmit(e)}>
-            <input 
-                type="text" 
-                value={newCategoryName} 
-                onChange={e => setNewCategoryName(e.target.value)} 
-                placeholder="Neue Kategorie"
-            />
-            <button type="submit" className="btn">
-                <span className="icon"><FaSave/></span>
-                <span className="btn-label">Neue Kategorie speichern</span>
-            </button>
-            <button className="btn" onClick={(event) => {
-                event.preventDefault();
-                const newCategoryForm:HTMLElement|null = document.getElementById("newCategoryForm");
-                const newCategoryButton:HTMLElement|null = document.getElementById("newCategoryButton");
-                if (newCategoryForm && newCategoryButton) {
-                    newCategoryButton.style.display = "inline-flex";
-                    newCategoryForm.style.display = "none";
-                }
-                else {
-                    throw new Error("CategoryForm or CategoryButton is null")
-                }
+                <input 
+                    type="text" 
+                    value={newCategoryName} 
+                    onChange={e => setNewCategoryName(e.target.value)} 
+                    placeholder="Neue Kategorie"
+                />
+                <button type="submit" className="btn">
+                    <span className="icon"><FaSave/></span>
+                    <span className="btn-label">Neue Kategorie speichern</span>
+                </button>
+                <button className="btn" onClick={(event) => {
+                    event.preventDefault();
+                    toggleNewCategoryForm(false)
                 }}>
-                <span className="icon"><FaTimesCircle/></span>
-                <span className="btn-label">Abbrechen</span>
-            </button>
+                    <span className="icon"><FaTimesCircle/></span>
+                    <span className="btn-label">Abbrechen</span>
+                </button>
             </form>
             </div>
         </div>
