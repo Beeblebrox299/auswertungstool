@@ -10,6 +10,7 @@ const FieldEdit: React.FC = () => {
     const [fields, setFields] = useState<Field[]>([]);
     const [newFieldName, setNewFieldName] = useState<string>("");
     const [newFieldType, setNewFieldType] = useState<string>("text");
+    const [fieldOptions, setFieldOptions] = useState<string[]>(["Option 1"])
 
     useEffect (() =>{
         setFields(getFields())
@@ -68,7 +69,7 @@ const FieldEdit: React.FC = () => {
         let fieldType: "Text"|"Zahl"|string[]
 
         if (newFieldType === "options") {
-            fieldType = [] //TODO: Add options to array
+            fieldType = fieldOptions;
         } 
         else if (newFieldType === "Text" || newFieldType === "Zahl") {
             fieldType = newFieldType
@@ -85,11 +86,9 @@ const FieldEdit: React.FC = () => {
 
         saveChanges([...fields, newField]);
         setNewFieldName('');
-        setNewFieldType("text");
+        toggleNewFieldForm(false);
     }
 
-    // TODO: Button fo renaming instead of displaying an input field (like in CategoryEdit)
-    // TODO: Ask for type of field (text, number, one of x options...) and store them for better manual input and visualisation
     return(<div className="displayBlock">
         <h1>Datenfelder</h1>
         <div className="grid gap-y-8">
@@ -116,39 +115,56 @@ const FieldEdit: React.FC = () => {
                 </div>
             </div>
         ))}
-            <div id="newFieldButton" className="info">
-                <button type="button" className="btn" onClick={() => toggleNewFieldForm(true)}>
-                    <span className="icon"><FaPlusCircle/></span>
-                    <span className="btn-label">Neues Datenfeld hinzufügen</span>
-                </button>
+        </div>
+        <div id="newFieldButton" className="info">
+            <button type="button" className="btn" onClick={() => toggleNewFieldForm(true)}>
+                <span className="icon"><FaPlusCircle/></span>
+                <span className="btn-label">Neues Datenfeld hinzufügen</span>
+            </button>
+        </div>
+        <div id="newFieldForm" className="hidden info">
+            <div className="info">Name: <input 
+                type="text" 
+                value={newFieldName} 
+                onChange={e => setNewFieldName(e.target.value)} 
+                placeholder="Name"
+            />
             </div>
-            <form id="newFieldForm" className="hidden" onSubmit={e => handleSubmit(e)}>
-                <div className="info">Name: </div>
-                <input 
-                    type="text" 
-                    value={newFieldName} 
-                    onChange={e => setNewFieldName(e.target.value)} 
-                    placeholder="Name"
-                />
-                <div className="info">Art: </div>
-                <select className="info border" onChange={e => setNewFieldType(e.target.value)}>
-                    <option value="Text">Text</option>
-                    <option value="Zahl">Zahl</option>
-                    <option value="options">Auswahlmöglichkeiten festlegen</option>
-                </select>
-                {(newFieldType === "options") && (<>Options Auswahl</>)}
-                <button type="submit" className="btn">
-                    <span className="icon"><FaSave/></span>
-                    <span className="btn-label">Neues Datenfeld speichern</span>
+            <div className="info">Art: 
+            <select className="info border" onChange={e => setNewFieldType(e.target.value)}>
+                <option value="Text">Text</option>
+                <option value="Zahl">Zahl</option>
+                <option value="options">Auswahlmöglichkeiten festlegen</option>
+            </select></div>
+            {(newFieldType === "options") && (<div>
+                {fieldOptions.map((option, index) => (
+                    <input
+                        key={index}
+                        type="text"
+                        defaultValue={option}
+                        onChange={(event) => {
+                            const updatedOptions = [...fieldOptions];
+                            updatedOptions[index] = event.target.value;
+                            setFieldOptions(updatedOptions);
+                        }}/>
+                ))}
+                <button type="button" className="btn" onClick={() => {setFieldOptions([...fieldOptions, "Option " + (fieldOptions.length+1)])}}>
+                    <span className="icon"><FaPlusCircle/></span>
                 </button>
-                <button className="btn" onClick={(event) => {
-                    event.preventDefault();
-                    toggleNewFieldForm(false);
-                }}>
-                    <span className="icon"><FaTimesCircle/></span>
-                    <span className="btn-label">Abbrechen</span>
-                </button>
-            </form>
+            </div>)}
+            <div className="info">
+            <button type="submit" className="btn" onClick={e => handleSubmit(e)}>
+                <span className="icon"><FaSave/></span>
+                <span className="btn-label">Neues Datenfeld speichern</span>
+            </button>
+            <button className="btn" onClick={(event) => {
+                event.preventDefault();
+                toggleNewFieldForm(false);
+            }}>
+                <span className="icon"><FaTimesCircle/></span>
+                <span className="btn-label">Abbrechen</span>
+            </button>
+            </div>
         </div>
     </div>
     )
