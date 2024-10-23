@@ -12,6 +12,7 @@ export interface Category {
 };
 
 export interface Field {
+    id: number,
     name: string,
     type: "text"|"number"|string[],
 };
@@ -27,7 +28,7 @@ const getFromLocalStorage = (type: string) => {
     if (typeof window !== "undefined"){
         storedString = localStorage.getItem(type)
     };
-    let storedArray = (storedString != null) ? JSON.parse(storedString) : [];
+    let storedArray = (storedString !== null && storedString !== "") ? JSON.parse(storedString) : [];
     return storedArray
 };
 

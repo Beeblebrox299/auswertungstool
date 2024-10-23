@@ -1,20 +1,15 @@
 import React, {useState, useRef, useEffect} from "react";
-import { Contribution, Category, generateId, getContributions, getCategories } from "@/app/utils";
+import { Contribution, Category, generateId, getContributions, getCategories, Field, getFields } from "@/app/utils";
 import Papa from "papaparse";
 
-interface PopupProps {
-    fields: string[],
-    onSelect: Function,
-};
-
-const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
+const CategoryStep: React.FC<{fields: Field[], onSelect: Function}> = ({fields, onSelect}) => {
     const [selected, setSelected] = useState<string>("none");
     const [seperator, setSeperator] = useState<string>("");
     let multiCategoryEnabled = useRef(false)
 
     useEffect(() => {
         const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
-        multiCategoryEnabled.current = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : false
+        multiCategoryEnabled.current = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : true // multiCategory is enabled by default
     });
     
     return (
@@ -23,8 +18,8 @@ const CategoryStep: React.FC<PopupProps> = ({fields, onSelect}) => {
             <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
                 <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
                 {fields.map((field) => (
-                    <option key={field} value={field}>
-                        {field}
+                    <option key={field.id} value={field.name}>
+                        {field.name}
                     </option>
                 ))}
             </select><br/>
@@ -48,7 +43,7 @@ const FileUpload: React.FC = () => {
     const [fileUploaded, setFileUploaded] = useState<boolean>(false);
     const [categoryFieldSet, setCategoryFieldSet] = useState<boolean>(false);
 
-    const [fields, setFields] = useState<string[]>([]);
+    const [fields, setFields] = useState<Field[]>([]);
 
     // File uploaded by user
     const [file, setFile] = useState<File|null>(null);
@@ -74,7 +69,24 @@ const FileUpload: React.FC = () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: function (results: any) {
-                    setFields(results.meta.fields);
+                    const fileFields: Field[] = []
+                    const fileFieldNames: string[] = results.meta.fields;
+                    const storedFields = getFields();
+                    storedFields.forEach((field, index) => {
+                        if (fileFieldNames.includes(field.name)) {
+                            fileFields.push(field);
+                            fileFieldNames.splice(index, 1);
+                        };
+                    });
+                    fileFieldNames.forEach(fieldName => {
+                        const newField: Field = {
+                            id: generateId(),
+                            name: fieldName,
+                            type: "text"
+                        };
+                        fileFields.push(newField);
+                    });
+                    setFields(fileFields);
                     setData(results.data);
                     setFileUploaded(true);
                 },
