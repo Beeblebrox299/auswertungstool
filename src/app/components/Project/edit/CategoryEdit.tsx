@@ -38,7 +38,8 @@ const CategoryEdit: React.FC = () => {
 
     const editCategoryName = (index: number): void =>{
         const newName = window.prompt("Geben Sie den neuen Namen ein", categories[index].name);
-        if (newName == "" || newName == null) {
+        if (newName === null) return
+        if (newName === "") {
             throw new Error("Category name cannot be empty")
         };
         const newCategoryArray = Array.from(categories);
