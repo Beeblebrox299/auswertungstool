@@ -43,6 +43,7 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds?: number[]): void, 
             {getRemainingCategories(index).map((category) => (
                 <option key={category.id} value={category.id.toString()}>{category.name}</option>
             ))}
+            <option value="new">Neue Kategorie erstellen</option> {/* TODO: Implement function to add new category*/}
         </select>
         {(index > 0) ? <button type="button" className="btn" onClick={() => {
                 const updatedCategoryIds = categoryIds.filter((_, idx) => idx != index);
