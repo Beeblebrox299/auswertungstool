@@ -82,7 +82,7 @@ const FileUpload: React.FC = () => {
                         const newField: Field = {
                             id: generateId(),
                             name: fieldName,
-                            type: "text"
+                            type: "Text"
                         };
                         fileFields.push(newField);
                     });
@@ -155,7 +155,7 @@ const FileUpload: React.FC = () => {
         if (typeof window !== "undefined"){
             localStorage.setItem("categories", JSON.stringify(categories));
             localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...data]));
-            localStorage.setItem("fields", JSON.stringify(fields));
+            localStorage.setItem("fields", JSON.stringify(fields.filter(field => field.name !== selectedField)));
             setMessageText('"' + file.name + '" wurde hochgeladen');
             setCategoryFieldSet(true)
         }

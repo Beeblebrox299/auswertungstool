@@ -65,12 +65,12 @@ const FieldEdit: React.FC = () => {
             throw new Error("Category name cannot be empty")
         };
 
-        let fieldType: "text"|"number"|string[]
+        let fieldType: "Text"|"Zahl"|string[]
 
         if (newFieldType === "options") {
             fieldType = [] //TODO: Add options to array
         } 
-        else if (newFieldType === "text" || newFieldType === "number") {
+        else if (newFieldType === "Text" || newFieldType === "Zahl") {
             fieldType = newFieldType
         }
         else {
@@ -94,15 +94,17 @@ const FieldEdit: React.FC = () => {
         <h1>Datenfelder</h1>
         <div className="grid gap-y-8">
         {fields.map((field, index) => (
-            <div key={field.name}>
-                <div className="info">
-                    Name: &nbsp;
-                    <span className="info border">{field.name}</span>
-                </div>
+            <div key={field.name} className="info border">
+                    <h2>{field.name}</h2>
                 <div className="info">Art: &nbsp;
                     <span className="info border">{(Array.isArray(field.type)) ? "Benutzerdefinierte Auswahlmöglichkeiten" : field.type}</span>
+                    <button type="button" className="btn">
+                        <span className="icon"><FaPencilAlt/></span>
+                        <span className="btn-label">Ändern</span>
+                    </button>
                     {/* TODO: Auswahlmöglichkeiten anzeigen */}
                 </div>
+                <div className="info">
                 <button type="button" className="btn" onClick={() => editFieldName(index)}>
                     <span className="icon"><FaPencilAlt/></span>
                     <span className="btn-label">Umbenennen</span>
@@ -111,6 +113,7 @@ const FieldEdit: React.FC = () => {
                     <span className="icon"><FaTrashAlt/></span>
                     <span className="btn-label">Löschen</span> 
                 </button>
+                </div>
             </div>
         ))}
             <div id="newFieldButton" className="info">
@@ -129,14 +132,14 @@ const FieldEdit: React.FC = () => {
                 />
                 <div className="info">Art: </div>
                 <select className="info border" onChange={e => setNewFieldType(e.target.value)}>
-                    <option value="string">Text</option>
-                    <option value="number">Zahl</option>
+                    <option value="Text">Text</option>
+                    <option value="Zahl">Zahl</option>
                     <option value="options">Auswahlmöglichkeiten festlegen</option>
                 </select>
                 {(newFieldType === "options") && (<>Options Auswahl</>)}
                 <button type="submit" className="btn">
                     <span className="icon"><FaSave/></span>
-                    <span className="btn-label">Neue Kategorie speichern</span>
+                    <span className="btn-label">Neues Datenfeld speichern</span>
                 </button>
                 <button className="btn" onClick={(event) => {
                     event.preventDefault();

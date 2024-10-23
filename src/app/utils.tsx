@@ -14,7 +14,7 @@ export interface Category {
 export interface Field {
     id: number,
     name: string,
-    type: "text"|"number"|string[],
+    type: "Text"|"Zahl"|string[],
 };
 
 export const generateId = ():number => {
