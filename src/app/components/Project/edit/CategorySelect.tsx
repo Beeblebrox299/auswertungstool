@@ -31,6 +31,7 @@ const CategorySelect: React.FC<{onCategorySelect(categoryIds?: number[]): void, 
                 localStorage.setItem("categories", JSON.stringify(categories))
             };
             newCategoryIds[index] = newCategory.id;
+            // TODO: Update other CategorySelects with new category
         }
         else newCategoryIds[index] = parseInt(target.value);
         onCategorySelect(newCategoryIds);
