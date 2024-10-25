@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import FileUpload from '../components/Project/edit/FileUpload';
 import ManualInput from '../components/Project/edit/ManualInput';
@@ -32,12 +32,14 @@ const Edit: React.FC = () => {
             <ManualInput/>
           </div>
           <div className='displayBlock'>
-            <button className="btn" onClick={() => {window.location.href='edit/categories'}}>Kategorien und Eingabefelder bearbeiten</button>
+            <Link className="btn" href='edit/categories'>Kategorien und Eingabefelder bearbeiten</Link>
           </div>
           </>
         ) : (
           <div className='displayBlock info'>
-            Sie haben noch kein Projekt gestartet. Möchten Sie <Link href={"/edit/init"}>ein Projekt einrichten</Link>?
+            Sie haben noch kein Projekt gestartet. Möchten Sie ein Projekt einrichten?
+            <br/>
+            <Link className='btn' href={"/edit/init"}>Start</Link>
           </div>
         )}   
       </div>

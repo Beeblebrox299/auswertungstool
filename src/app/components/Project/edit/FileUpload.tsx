@@ -1,6 +1,7 @@
 import React, {useState, useRef, useEffect} from "react";
 import { Contribution, Category, generateId, getContributions, getCategories, Field, getFields } from "@/app/utils";
 import Papa from "papaparse";
+import Link from "next/link";
 
 const CategoryStep: React.FC<{fields: Field[], onSelect: Function}> = ({fields, onSelect}) => {
     const [selected, setSelected] = useState<string>("none");
@@ -72,10 +73,10 @@ const FileUpload: React.FC = () => {
                     const fileFields: Field[] = []
                     const fileFieldNames: string[] = results.meta.fields;
                     const storedFields = getFields();
-                    storedFields.forEach((field, index) => {
+                    storedFields.forEach((field) => {
                         if (fileFieldNames.includes(field.name)) {
                             fileFields.push(field);
-                            fileFieldNames.splice(index, 1);
+                            fileFieldNames.splice(fileFieldNames.indexOf(field.name), 1);
                         };
                     });
                     fileFieldNames.forEach(fieldName => {
@@ -168,32 +169,44 @@ const FileUpload: React.FC = () => {
         }
     }
 
+    const renderFileUpload = () => {
+        if (!fileUploaded) {
+            return (
+                <form onSubmit={handleSubmit}>
+                    <input type="file" accept=".csv" ref={fileInputRef} onChange={e => handleChange(e.target.files)}/>
+                    <br/>
+                    <button type="submit" className="btn">Hochladen</button>
+                    <br/>
+                </form>
+            )
+        }
+        else if (!categoryFieldSet) {
+            return (
+                <CategoryStep 
+                    fields={fields}
+                    onSelect={handleSelect}
+                />
+            )
+        }
+    };
+
     return(
         <div>
-        {(!fileUploaded && !categoryFieldSet) && (
-            <form onSubmit={handleSubmit}>
-                <input type="file" accept=".csv" ref={fileInputRef} onChange={e => handleChange(e.target.files)}/>
-                <br/>
-                <button type="submit" className="btn">Hochladen</button>
-                <br/>
-            </form>
-        )}
-        {(fileUploaded && !categoryFieldSet) && (
-            <CategoryStep 
-                fields={fields}
-                onSelect={handleSelect}
-            />
-        )}
+        {renderFileUpload()}
         <span className="info">{messageText}</span>
         <br/>
-        {(fileUploaded && categoryFieldSet) && (
-            <button className="btn" onClick={() => {
-                setFileUploaded(false); 
-                setCategoryFieldSet(false);
-                setMessageText("")
-            }}>
-                Weitere Datei hochladen
-            </button>
+        {(fileUploaded && categoryFieldSet) && (<>
+        <button className="btn" onClick={() => {
+            setFileUploaded(false); 
+            setCategoryFieldSet(false);
+            setMessageText("")
+        }}>
+            Weitere Datei hochladen
+        </button>
+            <Link className="btn" href={"/coding"}>
+                Weiter zur Codierung
+            </Link>
+            </>
         )}
         </div>
     );

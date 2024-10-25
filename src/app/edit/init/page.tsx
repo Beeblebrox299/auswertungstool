@@ -1,9 +1,8 @@
 'use client';
 
 import React from "react";
-import CategoryEdit from "@/app/components/Project/edit/CategoryEdit";
-import FieldEdit from "@/app/components/Project/edit/FieldEdit";
 import FileUpload from "@/app/components/Project/edit/FileUpload";
+import Link from "next/link";
 
 /*
 TODO: Make the distinction between categories and fields clearer.
@@ -18,8 +17,8 @@ const Init: React.FC = () => {
         </div>
         <br/>
         <div className="displayBlock">
-            <FieldEdit/>
-            <CategoryEdit/>
+            <h1>Oder möchten Sie die ersten Beiträge manuell eingeben?</h1>
+            <Link href={"/edit/init/manual"} className="btn">Manuelle Eingabe</Link>
         </div>
         </>  
     )
