@@ -1,4 +1,4 @@
-import { getCategories, Category, Contribution } from "@/app/utils";
+import { getCategories, Category, Contribution, getFields } from "@/app/utils";
 import React, { useEffect, useState } from "react";
 import CategorySelect from "./CategorySelect";
 
@@ -7,6 +7,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
     const [categoryIds, setCategoryIds] = useState<number[]>(contributionContent.categories);
     const [categories, setCategories] = useState<Category[]>([]);
     const [ wasChanged, setWasChanged ] = useState<boolean>(false);
+    const fields = getFields()
     
     delete contributionContent.id;
     delete contributionContent.categories;
@@ -17,6 +18,11 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
     useEffect(() => {
         setCategories(getCategories());
     },[]);
+
+    const getFieldName = (id: number) => {
+        const field = fields.find(field => field.id === id);
+        return (field) ? field.name : "Konnte Bezeichnung nicht finden"
+    };
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
@@ -55,7 +61,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
         <div className="displayBlock">
             <span className="info">
                 {contributionKeys.map((key) => (
-                    <div className="info border" style={{whiteSpace: "pre-wrap"}} key={key}><b>{key}:</b> <br/>{contributionContent[key]}</div>
+                    <div className="info border" style={{whiteSpace: "pre-wrap"}} key={key}><b>{getFieldName(parseInt(key))}:</b> <br/>{contributionContent[key]}</div>
                 ))}
                 <form onSubmit={e => handleSubmit(e)}>
                     <CategorySelect
