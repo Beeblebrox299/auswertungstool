@@ -203,7 +203,7 @@ const FileUpload: React.FC = () => {
         }}>
             Weitere Datei hochladen
         </button>
-            <Link className="btn" href={"/coding"}>
+            <Link className="btn" href={"/edit/coding"}>
                 Weiter zur Codierung
             </Link>
             </>
