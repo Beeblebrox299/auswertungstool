@@ -15,7 +15,7 @@ const CategoryStep: React.FC<{fields: Field[], onSelect: Function}> = ({fields, 
     
     return (
         <div>
-            <h2 className="info">In welchem Feld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
+            <h2 className="info">In welchem Datenfeld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
             <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
                 <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
                 {fields.map((field) => (
@@ -25,7 +25,7 @@ const CategoryStep: React.FC<{fields: Field[], onSelect: Function}> = ({fields, 
                 ))}
             </select><br/>
             {(multiCategoryEnabled.current && selected !== "none") && (<>
-                <h2 className="info">Durch welches Zeichen sind die Kategorien getrennt?</h2>
+                <h2 className="info">Kann ein Beitrag mehrere Kategorien haben? Wenn ja, durch welches Zeichen sind die Kategorien getrennt?</h2>
                 <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
                     <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
                     <option value=";"> ; </option>
