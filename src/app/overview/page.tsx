@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import ContributionTable from '../components/Project/view/ContributionTable';
+import CategoryAccordion from '../components/Project/view/CategoryAccordion';
 
 const Overview: React.FC = () => {
     return (
         <div>
-          <ContributionTable/>
+          <CategoryAccordion/>
         </div>
     );
 }
