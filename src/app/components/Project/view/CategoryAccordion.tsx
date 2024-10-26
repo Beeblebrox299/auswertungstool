@@ -9,8 +9,10 @@ const CategoryAccordion: React.FC = () => {
     const fields = getFields();
 
     useEffect (() => {
-        setCategories(getCategories())
-        setContributions(getContributions())
+        const storedCategories = getCategories();
+        storedCategories.sort((a, b) => b.assignedTo.length - a.assignedTo.length);
+        setCategories(storedCategories);
+        setContributions(getContributions());
     }, []);
 
     const toggleOpenCategory = (categoryId: number) => {
