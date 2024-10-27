@@ -25,18 +25,12 @@ const CategoryAccordion: React.FC = () => {
         delete contributionContent.id;
         delete contributionContent.categories;
         delete contributionContent.categories_confirmed;
-
-        const getFieldName = (id: number) => {
-            const field = fields.find(field => field.id === id);
-            return (field) ? field.name : "Konnte Bezeichnung nicht finden"
-        };
-
-        const contributionKeys: string[] = Object.keys(contributionContent);
+        
         return (
             <div className="info border">
-                {contributionKeys.map((key) => (
-                    <div className="info border" style={{whiteSpace: "pre-wrap"}} key={key}>
-                        <b>{getFieldName(parseInt(key))}:</b> <br/>{contributionContent[key]}
+                {fields.map((field) => (
+                    <div className="info border" style={{whiteSpace: "pre-wrap"}} key={field.id}>
+                        <b>{field.name}:</b> <br/>{contributionContent[field.id]}
                     </div>
                 ))}
             </div>
