@@ -3,47 +3,71 @@ import { Contribution, Category, generateId, getContributions, getCategories, Fi
 import Papa from "papaparse";
 import Link from "next/link";
 
-const CategoryStep: React.FC<{fields: Field[], onSelect: Function}> = ({fields, onSelect}) => {
-    const [selected, setSelected] = useState<string>("none");
-    const [seperator, setSeperator] = useState<string>("");
-    let multiCategoryEnabled = useRef(false)
 
-    useEffect(() => {
-        const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
-        multiCategoryEnabled.current = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : true // multiCategory is enabled by default
-    });
-    
-    return (
-        <div>
-            <h2 className="info">In welchem Datenfeld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
-            <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
-                <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
-                {fields.map((field) => (
-                    <option key={field.id} value={field.name}>
-                        {field.name}
-                    </option>
-                ))}
-            </select><br/>
-            {(multiCategoryEnabled.current && selected !== "none") && (<>
-                <h2 className="info">Kann ein Beitrag mehrere Kategorien haben? Wenn ja, durch welches Zeichen sind die Kategorien getrennt?</h2>
-                <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
-                    <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
-                    <option value=";"> ; </option>
-                    {/* TODO: Add more options and let user input custom seperator value */}
-                </select><br/></>
-            )}  
-            <button className="btn" onClick={() => onSelect(selected, seperator)}>OK</button>
-        </div>
-    )
-};
 
 const FileUpload: React.FC = () => {
+    const CategoryStep: React.FC = () => {
+        const [selected, setSelected] = useState<string>("none");
+        const [seperator, setSeperator] = useState<string>("");
+        let multiCategoryEnabled = useRef(false)
+
+        useEffect(() => {
+            const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
+            multiCategoryEnabled.current = (multiCategoryEnabledString) ? JSON.parse(multiCategoryEnabledString) : true // multiCategory is enabled by default
+        });
+        
+        return (
+            <div>
+                <h2 className="info">In welchem Datenfeld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
+                <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
+                    <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
+                    {fields.map((field) => (
+                        <option key={field.id} value={field.name}>
+                            {field.name}
+                        </option>
+                    ))}
+                </select><br/>
+                {(multiCategoryEnabled.current && selected !== "none") && (<>
+                    <h2 className="info">Kann ein Beitrag mehrere Kategorien haben? Wenn ja, durch welches Zeichen sind die Kategorien getrennt?</h2>
+                    <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
+                        <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
+                        <option value=";"> ; </option>
+                        {/* TODO: Add more options and let user input custom seperator value */}
+                    </select><br/></>
+                )}  
+                <button className="btn" onClick={() => handleSelect(selected, seperator)}>OK</button>
+            </div>
+        )
+    };
+
+    // Detect field types and let user confirm (hardcoded because of time)
+    const FieldStep:React.FC = () => {
+
+        return(
+            <div className="info">
+            <h2>Das Datenfeld &quot;Altergruppe&quot; scheint eine begrenzte Anzahl an Antwortmöglichkeiten zu haben. Ich konnte diese Werte finden:</h2>
+                <ul className="info border">
+                    <li>Unter 18 Jahre</li>
+                    <li>18-30 Jahre</li>
+                    <li>31-50 Jahre</li>
+                    <li>51-65 Jahre</li>
+                    <li>65 Jahre und älter</li>
+                </ul>
+                <br/>
+            <h2>Wollen Sie das so speichern?</h2>
+            <button className="btn">Ja</button>
+        </div>
+        )
+    };
+
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     // useStates for conditional rendering
     const [fileUploaded, setFileUploaded] = useState<boolean>(false);
     const [categoryFieldSet, setCategoryFieldSet] = useState<boolean>(false);
+    const [ageFieldConfirmed, setAgeFieldConfirmed] = useState<boolean>(false);
 
+    // 
     const [fields, setFields] = useState<Field[]>([]);
 
     // File uploaded by user
@@ -55,11 +79,15 @@ const FileUpload: React.FC = () => {
     // Message to show after user hits 'submit'
     const [messageText, setMessageText] = useState<string>('');
 
+    useEffect(() => {
+        setFields(getFields())
+    }, [])
+
     const handleChange = (fileList: FileList|null) => {
         if (fileList != null) {
             setFile(fileList[0]);
             setMessageText('');
-        }
+        };
     };
 
     // parse file & update contributions in localStorage
@@ -72,7 +100,7 @@ const FileUpload: React.FC = () => {
                 complete: function (results: any) {
                     const fileFields: Field[] = []
                     const fileFieldNames: string[] = results.meta.fields;
-                    const storedFields = getFields();
+                    const storedFields = [...fields]
                     storedFields.forEach((field) => {
                         if (fileFieldNames.includes(field.name)) {
                             fileFields.push(field);
@@ -80,11 +108,13 @@ const FileUpload: React.FC = () => {
                         };
                     });
                     fileFieldNames.forEach(fieldName => {
+
                         const newField: Field = {
                             id: generateId(),
                             name: fieldName,
                             type: "Text"
                         };
+                        if (fieldName === "Altersgruppe") newField.type = ["Unter 18 Jahre", "18-30 Jahre", "31-50 Jahre", "51-65 Jahre", "65 Jahre und älter"]
                         fileFields.push(newField);
                     });
                     setFields(fileFields);
@@ -165,7 +195,7 @@ const FileUpload: React.FC = () => {
             localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...contributions]));
             localStorage.setItem("fields", JSON.stringify(fieldsWithoutCategory));
             setMessageText('"' + file.name + '" wurde hochgeladen');
-            setCategoryFieldSet(true)
+            setCategoryFieldSet(true);
         }
     }
 
@@ -182,32 +212,34 @@ const FileUpload: React.FC = () => {
         }
         else if (!categoryFieldSet) {
             return (
-                <CategoryStep 
-                    fields={fields}
-                    onSelect={handleSelect}
-                />
+                <CategoryStep/>
+            )
+        }
+        else if (!ageFieldConfirmed) {
+            return(
+                <FieldStep/>
             )
         }
     };
 
     return(
         <div>
-        {renderFileUpload()}
-        <span className="info">{messageText}</span>
-        <br/>
-        {(fileUploaded && categoryFieldSet) && (<>
-        <button className="btn" onClick={() => {
-            setFileUploaded(false); 
-            setCategoryFieldSet(false);
-            setMessageText("")
-        }}>
-            Weitere Datei hochladen
-        </button>
-            <Link className="btn" href={"/edit/coding"}>
-                Weiter zur Codierung
-            </Link>
-            </>
-        )}
+            {renderFileUpload()}
+            <span className="info">{messageText}</span>
+            <br/>
+            {(fileUploaded && categoryFieldSet && ageFieldConfirmed) && (<>
+                <button className="btn" onClick={() => {
+                    setFileUploaded(false); 
+                    setCategoryFieldSet(false);
+                    setMessageText("")
+                }}>
+                    Weitere Datei hochladen
+                </button>
+                <Link className="btn" href={"/edit/coding"}>
+                    Weiter zur Codierung
+                </Link>
+                </>
+            )}
         </div>
     );
 }
