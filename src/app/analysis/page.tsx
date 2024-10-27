@@ -1,9 +1,12 @@
-import Graphics from "../components/Project/view/Graphics";
+'use client'
+
+import { AgePieChart, CategoriesBarChart } from "../components/Project/view/Graphics";
 
 const Analysis: React.FC = () => {
     return(
         <div>
-            <Graphics/>
+            <CategoriesBarChart/>
+            <AgePieChart/>
         </div>
     )
 };
