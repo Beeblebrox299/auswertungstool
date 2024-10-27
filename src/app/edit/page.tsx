@@ -24,11 +24,11 @@ const Edit: React.FC = () => {
         {projectExists ? ( 
           <>
           <div className='displayBlock'>
-            <h1>Beiträge aus CSV-Datei importieren:</h1>
+            <h1>Beiträge aus CSV-Datei importieren</h1>
             <FileUpload/>
           </div>
           <div className='displayBlock'>
-            <h1>Beitrag manuell eintragen:</h1>
+            <h1>Beitrag manuell eintragen</h1>
             <ManualInput/>
           </div>
           <div className='displayBlock'>

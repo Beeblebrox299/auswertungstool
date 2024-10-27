@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Category, Contribution, generateId, getCategories, getContributions, getFields } from "@/app/utils";
-import { FaPlusCircle } from "react-icons/fa";
 import CategorySelect from "./CategorySelect";
 
 const ManualInput: React.FC = () => {
@@ -16,11 +15,11 @@ const ManualInput: React.FC = () => {
 
     const fields = getFields();
 
-    const handleInputChange = (key: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValues(inputValues => ({
+    const handleInputChange = (key: number) => (event: React.ChangeEvent<HTMLInputElement>|React.ChangeEvent<HTMLTextAreaElement>) => {
+        setInputValues({
             ...inputValues,
             [key]: event.target.value,
-        }));
+        });
     }
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -49,20 +48,40 @@ const ManualInput: React.FC = () => {
         <div>
             <form onSubmit={handleSubmit}>
                 {fields.map(field => (
-                    <div key={field.id}>
-                        <label>{field.name}:</label>
-                        <input
-                            type="text"
-                            value={inputValues[field.id] || ''}
-                            onChange={handleInputChange(field.id)}
-                        />
+                    <div className="formContainer" key={field.id}>
+                        <h2>{field.name}: </h2>
+                        {(typeof field.type === "string" ? 
+                            ((field.name === "Beschreibung") ?
+                                <textarea 
+                                    className="info"
+                                    onChange={handleInputChange(field.id)} 
+                                    value={inputValues[field.id]|| ''}
+                                >
+                                    
+                                </textarea>
+                                :
+                                <input 
+                                    className="info"
+                                    type="text"
+                                    value={inputValues[field.id] || ''}
+                                    onChange={handleInputChange(field.id)}
+                                />)
+                        :
+                        <select className="info" defaultValue={"Keine Angabe"}>
+                            <option value="Keine Angabe" disabled>Auswählen</option>
+                            {field.type.map((option) => (
+                                <option key={option} value={option}>{option}</option>
+                            ))}
+                        </select>
+                        )}   
                     </div>
                 ))}
+                <h2>Kategorie(n): </h2>
                 <CategorySelect
                     onCategorySelect={(newCategoryIds) => {if (newCategoryIds) setCategoryIds(newCategoryIds)}}
                     initialCategoryIds={categoryIds}
                     categories={categories}
-                    />
+                    /><br/>
                 <button className="btn" type="submit">Abschicken</button>
             </form>
         </div>
