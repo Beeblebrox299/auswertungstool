@@ -131,7 +131,7 @@ const FileUpload: React.FC = () => {
                             name: fieldName,
                             type: "Text"
                         };
-                        if (fieldName === "Altersgruppe") newField.type = ["Unter 18 Jahre", "18-30 Jahre", "31-50 Jahre", "51-65 Jahre", "65 Jahre und älter"]
+                        if (fieldName === "Altersgruppe") newField.type = ["Keine Angabe", "Unter 18 Jahre", "18-30 Jahre", "31-50 Jahre", "51-65 Jahre", "65 Jahre und älter"]
                         fileFields.push(newField);
                     });
                     setFields(fileFields);
