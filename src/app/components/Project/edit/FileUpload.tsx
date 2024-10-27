@@ -7,9 +7,10 @@ import Link from "next/link";
 
 const FileUpload: React.FC = () => {
     const CategoryStep: React.FC = () => {
-        const [selected, setSelected] = useState<string>("none");
-        const [seperator, setSeperator] = useState<string>("");
-        let multiCategoryEnabled = useRef(false)
+        // name of field that holds categories and char that seperates categories
+        const [selectedField, setSelectedField] = useState<string>("none");
+        const [selectedSeperator, setSelectedSeperator] = useState<string>("");
+        let multiCategoryEnabled = useRef(true)
 
         useEffect(() => {
             const multiCategoryEnabledString = localStorage.getItem("multiCategoryEnabled");
@@ -19,7 +20,7 @@ const FileUpload: React.FC = () => {
         return (
             <div>
                 <h2 className="info">In welchem Datenfeld befinden sich die Kategorien, die Sie später bearbeiten möchten?</h2>
-                <select defaultValue={"none"} onChange={(e) => setSelected(e.target.value)} className="info">
+                <select defaultValue={"none"} onChange={(e) => setSelectedField(e.target.value)} className="info">
                     <option value={"none"}>Es sind noch keine Kategorien in den Daten</option>
                     {fields.map((field) => (
                         <option key={field.id} value={field.name}>
@@ -27,15 +28,22 @@ const FileUpload: React.FC = () => {
                         </option>
                     ))}
                 </select><br/>
-                {(multiCategoryEnabled.current && selected !== "none") && (<>
+                {multiCategoryEnabled.current}
+                {(multiCategoryEnabled.current && selectedField !== "none") && (<>
                     <h2 className="info">Kann ein Beitrag mehrere Kategorien haben? Wenn ja, durch welches Zeichen sind die Kategorien getrennt?</h2>
-                    <select defaultValue={""} onChange={(e) => setSeperator(e.target.value)}className="info">
+                    <select defaultValue={""} onChange={(e) => setSelectedSeperator(e.target.value)}className="info">
                         <option value="">Es gibt nur eine Kategorie pro Beitrag</option>
                         <option value=";"> ; </option>
                         {/* TODO: Add more options and let user input custom seperator value */}
                     </select><br/></>
                 )}  
-                <button className="btn" onClick={() => handleSelect(selected, seperator)}>OK</button>
+                <button className="btn" onClick={() => { 
+                    setCategoryField(selectedField);
+                    setCategorySeperator(selectedSeperator);
+                    setCategoryFieldSet(true);
+                }}>
+                    OK
+                </button>
             </div>
         )
     };
@@ -47,6 +55,7 @@ const FileUpload: React.FC = () => {
             <div className="info">
             <h2>Das Datenfeld &quot;Altergruppe&quot; scheint eine begrenzte Anzahl an Antwortmöglichkeiten zu haben. Ich konnte diese Werte finden:</h2>
                 <ul className="info border">
+                    <li>Keine Angabe</li>
                     <li>Unter 18 Jahre</li>
                     <li>18-30 Jahre</li>
                     <li>31-50 Jahre</li>
@@ -55,7 +64,10 @@ const FileUpload: React.FC = () => {
                 </ul>
                 <br/>
             <h2>Wollen Sie das so speichern?</h2>
-            <button className="btn">Ja</button>
+            <button className="btn" onClick={() => {
+                handleSelect(categoryField, categorySeperator);
+                setAgeFieldConfirmed(true);
+            }}>Ja</button>
         </div>
         )
     };
@@ -74,7 +86,12 @@ const FileUpload: React.FC = () => {
     const [file, setFile] = useState<File|null>(null);
 
     // parsed file
-    const [data, setData] = useState<[]|null>(null)
+    const [data, setData] = useState<[]|null>(null);
+
+
+    // name of field that holds categories and char that seperates categories
+    const [categoryField, setCategoryField] = useState<string>("none");
+    const [categorySeperator, setCategorySeperator] = useState<string>("");
 
     // Message to show after user hits 'submit'
     const [messageText, setMessageText] = useState<string>('');
@@ -195,7 +212,6 @@ const FileUpload: React.FC = () => {
             localStorage.setItem("contributions", JSON.stringify([...storedContributions, ...contributions]));
             localStorage.setItem("fields", JSON.stringify(fieldsWithoutCategory));
             setMessageText('"' + file.name + '" wurde hochgeladen');
-            setCategoryFieldSet(true);
         }
     }
 
