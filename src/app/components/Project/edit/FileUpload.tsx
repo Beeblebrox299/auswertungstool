@@ -251,6 +251,9 @@ const FileUpload: React.FC = () => {
                 }}>
                     Weitere Datei hochladen
                 </button>
+                <Link className="btn" href={"/edit/manual"}>
+                    Weitere Beiträge manuell eingeben
+                </Link>
                 <Link className="btn" href={"/edit/coding"}>
                     Weiter zur Codierung
                 </Link>

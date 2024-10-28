@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Category, Contribution, generateId, getCategories, getContributions, getFields } from "@/app/utils";
 import CategorySelect from "./CategorySelect";
+import Link from "next/link";
 
 const ManualInput: React.FC = () => {
     const [storedContributions, setStoredContributions] = useState<Contribution[]>([]);
@@ -107,7 +108,9 @@ const ManualInput: React.FC = () => {
                     initialCategoryIds={categoryIds}
                     categories={categories}
                     /><br/>
-                <button className="btn" type="submit">Abschicken</button>
+                <button className="btn" type="submit">Speichern und weiteren Beitrag eingeben</button>
+                <button className="btn" onClick={(event) => {handleSubmit(event); window.location.href = "/auswertungstool/edit/coding"}}>Speichern und weiter zur Codierung</button>
+                <Link className="btn" href={"/edit/coding"}>Ohne Speichern zur Codierung</Link>
             </form>
         </div>
     );

@@ -1,7 +1,6 @@
 'use client';
 
 import React from "react";
-import FileUpload from "@/app/components/Project/edit/FileUpload";
 import Link from "next/link";
 
 /*
@@ -13,12 +12,12 @@ const Init: React.FC = () => {
         <>
         <div className="displayBlock">
             <h1>Möchten Sie das Projekt aus einer CSV-Datei erstellen?</h1>
-            <FileUpload/>
+            <Link href={"/edit/file-upload"} className="btn">Datei hochladen</Link>
         </div>
         <br/>
         <div className="displayBlock">
             <h1>Oder möchten Sie die ersten Beiträge manuell eingeben?</h1>
-            <Link href={"/edit/init/manual"} className="btn">Manuelle Eingabe</Link>
+            <Link href={"/edit/categories"} className="btn">Manuelle Eingabe</Link>
         </div>
         </>  
     )
