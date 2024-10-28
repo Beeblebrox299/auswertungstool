@@ -58,7 +58,7 @@ const CodingBox: React.FC<{contributionWithId: Contribution, contributionArray: 
     };
     
     return(
-        <div className="displayBlock">
+        <div className="displayBlock noPaddingLeft">
             <span className="info">
                 {contributionKeys.map((key) => (
                     <div className="info border" style={{whiteSpace: "pre-wrap"}} key={key}><b>{getFieldName(parseInt(key))}:</b> <br/>{contributionContent[key]}</div>

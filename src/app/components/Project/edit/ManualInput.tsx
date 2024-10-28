@@ -73,11 +73,13 @@ const ManualInput: React.FC = () => {
         <div>
             <form onSubmit={handleSubmit}>
                 {fields.map(field => (
-                    <div className="formContainer" key={field.id}>
+                    <div key={field.id}>
                         <h2>{field.name}: </h2>
                         {(typeof field.type === "string" ? 
-                            ((field.name === "Beschreibung") ?
+                            ((field.name !== "Titel") ?
                                 <textarea 
+                                    cols={50}
+                                    rows={3}
                                     className="info"
                                     onChange={handleInputChange(field.id)} 
                                     value={inputValues[field.id]|| ''}
@@ -99,7 +101,8 @@ const ManualInput: React.FC = () => {
                             ))}
                             <option value="new">Neue Option erstellen</option>
                         </select>
-                        )}   
+                        )}  
+                    <br/><br/> 
                     </div>
                 ))}
                 <h2>Kategorie(n): </h2>
