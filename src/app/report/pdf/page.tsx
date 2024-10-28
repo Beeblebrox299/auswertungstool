@@ -1,12 +1,13 @@
 'use client';
 
-import { Image } from '@/app/utils';
+import { Image as ImageInterface } from '@/app/utils';
 import { Document, Page, PDFViewer, Text, View, Image as PDFImage } from '@react-pdf/renderer';
 import React, { useEffect, useState } from 'react';
 
 const Report: React.FC = () => {
-    const [reportContent, setReportContent] = useState<{titel: string,einleitung: string,images: Image[]}>({titel: "", einleitung: "", images: []});
-    const [images, setImages] = useState<Image[]>([]);
+    const [reportContent, setReportContent] = useState<{titel: string,einleitung: string,images: ImageInterface[]}>({titel: "", einleitung: "", images: []});
+    const [images, setImages] = useState<ImageInterface[]>([]);
+    const [PDFModule, setPDFModule] = useState<{Document: any, Page: any, Text: any, PDFViewer: any, Image: any}|null>(null);
 
     useEffect(() => {
         const storedReportString = localStorage.getItem("report");
@@ -15,7 +16,18 @@ const Report: React.FC = () => {
         const storedImagesString = localStorage.getItem("images");
         const storedImages = (storedImagesString) ? JSON.parse(storedImagesString) : [];
         setImages(storedImages);
+        const loadPDF = async () => {
+            const { Document, Page, Text } = await import('@react-pdf/renderer');
+            setPDFModule({ Document, Page, Text, PDFViewer, Image});
+        };
+        loadPDF();
     }, [])
+
+    if (!PDFModule) {
+        return(
+            <div className='displayBlock'>Erstelle Bericht...</div>
+        )
+    }
 
     return (
         <div className='h-screen w-screen'>
