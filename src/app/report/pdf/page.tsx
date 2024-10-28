@@ -1,13 +1,11 @@
 'use client';
 
-import { Image as ImageInterface } from '@/app/utils';
-import { Document, Page, PDFViewer, Text, View, Image as PDFImage } from '@react-pdf/renderer';
+import { Image } from '@/app/utils';
 import React, { useEffect, useState } from 'react';
 
 const Report: React.FC = () => {
-    const [reportContent, setReportContent] = useState<{titel: string,einleitung: string,images: ImageInterface[]}>({titel: "", einleitung: "", images: []});
-    const [images, setImages] = useState<ImageInterface[]>([]);
-    const [PDFModule, setPDFModule] = useState<{Document: any, Page: any, Text: any, PDFViewer: any, Image: any}|null>(null);
+    const [reportContent, setReportContent] = useState<{titel: string,einleitung: string,images: Image[]}>({titel: "", einleitung: "", images: []});
+    const [images, setImages] = useState<Image[]>([]);
 
     useEffect(() => {
         const storedReportString = localStorage.getItem("report");
@@ -16,42 +14,11 @@ const Report: React.FC = () => {
         const storedImagesString = localStorage.getItem("images");
         const storedImages = (storedImagesString) ? JSON.parse(storedImagesString) : [];
         setImages(storedImages);
-        const loadPDF = async () => {
-            const { Document, Page, Text } = await import('@react-pdf/renderer');
-            setPDFModule({ Document, Page, Text, PDFViewer, Image});
-        };
-        loadPDF();
     }, [])
 
-    if (!PDFModule) {
-        return(
-            <div className='displayBlock'>Erstelle Bericht...</div>
-        )
-    }
-
     return (
-        <div className='h-screen w-screen'>
-            <PDFViewer className='pl-52 h-full w-full'>
-                <Document>
-                    <Page size="A4">
-                        <View style={{ color: 'black', textAlign: 'center', margin: 30, fontSize: 30 }}>
-                            <Text>{reportContent.titel}</Text>
-                        </View>
-                        <View style={{fontSize: 12, margin: 10}}>
-                            <Text>{reportContent.einleitung + "\n \n"}</Text>
-                            {images.map((image, index) => (
-                                <View key={index}>
-                                <Text>{image.description + "\n\n"} 
-                                    
-                                </Text>
-                                <Text>Abbildung : {image.name}</Text>
-                                <PDFImage style={{}} src={image.src}/>
-                                </View>
-                            ))}
-                        </View>
-                    </Page>
-                </Document>
-            </PDFViewer>
+        <div className='displayBlock'>
+            Erstelle PDF...
         </div>
     );
 }
