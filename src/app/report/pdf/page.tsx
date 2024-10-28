@@ -5,7 +5,7 @@ import { Document, Page, PDFViewer, Text, View, Image as PDFImage } from '@react
 import React, { useEffect, useState } from 'react';
 
 const Report: React.FC = () => {
-    const [reportContent, setReportContent] = useState<{}>({});
+    const [reportContent, setReportContent] = useState<{titel: string,einleitung: string,images: Image[]}>({titel: "", einleitung: "", images: []});
     const [images, setImages] = useState<Image[]>([]);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const Report: React.FC = () => {
                 <Document>
                     <Page size="A4">
                         <View style={{ color: 'black', textAlign: 'center', margin: 30, fontSize: 30 }}>
-                            <Text>{reportContent["titel"]}</Text>
+                            <Text>{reportContent.titel}</Text>
                         </View>
                         <View style={{fontSize: 12, margin: 10}}>
                             <Text>{reportContent.einleitung + "\n \n"}</Text>
