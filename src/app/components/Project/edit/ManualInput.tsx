@@ -20,6 +20,30 @@ const ManualInput: React.FC = () => {
             ...inputValues,
             [key]: event.target.value,
         });
+    };
+
+    const handleSelect = (key: number) => (event: React.ChangeEvent<HTMLSelectElement>) => {
+        if(event.target.value === "new") {
+            const index = fields.findIndex(field => field.id === key);
+            if (typeof fields[index].type !== "object") return
+            const newOption = window.prompt('Geben Sie die neue Option für "Altersgruppe" ein', "Altersgruppe");
+            if (newOption === null) return;
+            if (newOption === "") throw new Error("option cannot be empty");
+            fields[index].type.push(newOption);
+            if (typeof window !== "undefined") {
+                localStorage.setItem("fields", JSON.stringify(fields));
+            };
+            setInputValues({
+                ...inputValues,
+                [key]: newOption,
+            });
+        }
+        else {
+            setInputValues({
+                ...inputValues,
+                [key]: event.target.value,
+            });
+        }
     }
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -67,11 +91,12 @@ const ManualInput: React.FC = () => {
                                     onChange={handleInputChange(field.id)}
                                 />)
                         :
-                        <select className="info" defaultValue={"Keine Angabe"}>
+                        <select className="info" value={inputValues[field.id] || "Keine Angabe"} onChange={handleSelect(field.id)}>
                             <option value="Keine Angabe" disabled>Auswählen</option>
                             {field.type.map((option) => (
                                 <option key={option} value={option}>{option}</option>
                             ))}
+                            <option value="new">Neue Option erstellen</option>
                         </select>
                         )}   
                     </div>
