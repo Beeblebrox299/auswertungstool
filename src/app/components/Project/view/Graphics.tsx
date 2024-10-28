@@ -32,7 +32,7 @@ export const CategoriesBarChart: React.FC = () => {
             {isClient && (
             <BarChart width={width} height={550} data={data}>
                 <XAxis height={175} dataKey="name" tick={renderAxisTicks} interval={0}/>
-                <YAxis width={200}/>
+                <YAxis width={120}/>
                 <Bar dataKey="value" barSize={50} fill="lightgrey" label/>
             </BarChart>
             )}
@@ -90,7 +90,7 @@ export const AgePieChart: React.FC = () => {
     return(
         <div>
         {isClient && (
-            <PieChart width={800} height={400}>
+            <PieChart width={600} height={400}>
                 <Pie
                     data={data}
                     dataKey="value"
