@@ -69,13 +69,20 @@ input {
   & .border {
     border: 0.5px solid lightgray;
   }
+  & textarea {
+    resize: both;
+  }
 }
 
 .displayBlock {
   border-bottom: 0.5px solid lightgray;
+  padding-top: 2rem;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
-  margin-left: 1rem;
+  padding-left: 16rem;
+  & .noPaddingLeft {
+    padding-left: 0;
+  }
 }
 
 .formContainer {
