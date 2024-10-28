@@ -1,8 +1,10 @@
 import { Category, Contribution, getCategories, getContributions, getFields } from "@/app/utils";
+import Link from "next/link";
 import { useEffect, useState } from "react"
 import { FaArrowDown, FaArrowRight } from "react-icons/fa";
 
 const CategoryAccordion: React.FC = () => {
+    console.log("he")
     const [openCategory, setOpenCategory] = useState<number|null>(null);
     const [categories, setCategories] = useState<Category[]>([]);
     const [contributions, setContributions] = useState<Contribution[]>([]);
@@ -36,7 +38,7 @@ const CategoryAccordion: React.FC = () => {
             </div>
         )
     }
-    return (
+    return (<>
         <div className="displayBlock">
         {categories.map((category) =>(
             <div key={category.id} className="info border">
@@ -53,6 +55,12 @@ const CategoryAccordion: React.FC = () => {
             </div>
         ))}
         </div>
+        <div className="displayBlock">
+            <h1>Nächste Schritte: </h1>
+            <Link className="btn" href={"/analysis"}>Diagramme erstellen</Link>
+            <Link className="btn" href={"/report"}>Bericht erstellen</Link>
+        </div>
+        </>
     )
 };
 

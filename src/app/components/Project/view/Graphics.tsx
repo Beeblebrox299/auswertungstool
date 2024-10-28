@@ -15,7 +15,8 @@ export const CategoriesBarChart: React.FC = () => {
         data.push({name: category.name, value: category.assignedTo.length})
     }));
 
-    const width: number = data.length * 150 + 200;
+    const maxWidth: number = 800;
+    const width: number = ((data.length * 150 + 200) < maxWidth) ? data.length * 150 + 200 : maxWidth;
 
     const renderAxisTicks = ({ x, y, payload }: {x:number, y:number, payload:{value:string, [key:string]: any}}) => {
         return (
@@ -33,7 +34,7 @@ export const CategoriesBarChart: React.FC = () => {
             <BarChart width={width} height={550} data={data}>
                 <XAxis height={175} dataKey="name" tick={renderAxisTicks} interval={0}/>
                 <YAxis width={120}/>
-                <Bar dataKey="value" barSize={50} fill="lightgrey" label/>
+                <Bar dataKey="value" barSize={(width-300) / data.length} fill="lightgrey" label/>
             </BarChart>
             )}
         </div>

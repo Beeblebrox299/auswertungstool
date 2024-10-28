@@ -17,6 +17,11 @@ export interface Field {
     type: "Text"|"Zahl"|string[],
 };
 
+export interface Image {
+    name: string,
+    src: string,
+};
+
 export const generateId = ():number => {
     /* FIXME: I'm not working with a huge number of contributions, so the probability of 2 IDs being equal is fairly small (about 0.02% for 2000 IDs).
     When working with a bigger number of IDs, this should be adapted*/ 

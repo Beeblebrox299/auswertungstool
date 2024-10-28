@@ -23,7 +23,7 @@ const Coding: React.FC = () => {
     };
     
     return(
-        <div className="displayBlock">
+        <div>
            {contributions.length > 0 ? (
                 <div>
                     {contributions.map((contribution, index) => 
