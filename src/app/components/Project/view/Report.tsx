@@ -1,17 +1,6 @@
-import {Document, Page, Image as PDFImage, Text, PDFViewer} from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import { Image } from "@/app/utils";
 
-const ReportDocument: React.FC = () => {
-    return (
-        <Document>
-            <Page size="A4">
-                <Text>Bericht!</Text>
-            </Page>
-        </Document>
-    )
-
-};
 
 const defaultProject = {
     place: "[STADT]",
@@ -22,9 +11,8 @@ const defaultProject = {
 
 const ReportForm: React.FC = () => {
     const getEinleitung = (project: {place: string, startDate: string, endDate: string, multiCategory: string}) => {
-        return "Vom " + project.startDate + " bis zum " + project.endDate + " konnten BürgerInnen in " + project.place + " Beiräge abgeben. \nDie Ergebnisse möchten wir in diesem Bericht vorstellen."
+        return "Vom " + project.startDate + " bis zum " + project.endDate + " konnten BürgerInnen in " + project.place + " Beiträge abgeben. \nDie Ergebnisse möchten wir in diesem Bericht vorstellen."
     };
-
 
     const [graphics, setGraphics] = useState<Image[]>([]);
     const [title, setTitle] = useState<string>("Bürgerbeteiligung in " + defaultProject.place)
@@ -36,6 +24,23 @@ const ReportForm: React.FC = () => {
         setEinleitung((storedProject) ? getEinleitung(JSON.parse(storedProject)) : getEinleitung(defaultProject));
         setTitle("Bürgerbeteiligung in " + ((storedProject) ? JSON.parse(storedProject)["place"] : defaultProject.place));
     }, []);
+
+    const storeReport = (event: React.FormEvent) => {
+        const bericht: {[key: string]: any} = {
+            titel: title,
+            einleitung: einleitung,
+            images: [],
+        };
+        graphics.forEach((graphic, index) => {
+            const textarea = document.getElementById("description" + index)
+            graphic.description = (textarea instanceof HTMLTextAreaElement) ? textarea.value : "";
+            console.log(textarea, graphic.description)
+        });
+        if (typeof window !== "undefined") {
+            localStorage.setItem("report", JSON.stringify(bericht));
+            localStorage.setItem("images", JSON.stringify(graphics))
+        };
+    }
 
     return (
         <div className="displayBlock">
@@ -58,7 +63,7 @@ const ReportForm: React.FC = () => {
                             <img src={image.src}/>
                             <br/><br/>
                             <label>Beschreibung der Grafik: </label><br/>
-                            <textarea cols={50} rows={8}/>
+                            <textarea id={"description" + index} cols={50} rows={8} defaultValue={image.description}/>
                             <br/>
                             <button className="btn" onClick={(event) => {
                                 event.preventDefault();
@@ -73,7 +78,7 @@ const ReportForm: React.FC = () => {
                         </div>
                     ))}
                 </div>
-                <button type="submit" className="btn">Bericht erstellen</button>
+                <button className="btn" onClick={(event) => {event.preventDefault(); storeReport(event); window.location.href = "/auswertungstool/report/pdf"}}>Bericht erstellen</button>
             </form>
         </div>
     )

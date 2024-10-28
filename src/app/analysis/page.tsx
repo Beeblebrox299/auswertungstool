@@ -14,12 +14,13 @@ const Analysis: React.FC = () => {
 
     const exportChart = (chartRef: MutableRefObject<HTMLDivElement | null>, name: string) => {
         if (chartRef.current === null) return;
+        
         html2canvas(chartRef.current).then(canvas => {
             const imgData = canvas.toDataURL('image/png');
             if (typeof window !== "undefined") {
                 const imagesString = localStorage.getItem("images");
                 const imagesArray: Image[] = (imagesString) ? JSON.parse(imagesString) : [];
-                imagesArray.push({name: name, src: imgData});
+                imagesArray.push({name: name, src: imgData, description: (name === "Verteilung von Altersgruppen") ? "Hier ist die Verteilung der Frage nach Altersgruppen zu sehen." : "Wie hier zu sehen ist, wurde die Kategorie 'Infrastruktur und Mobilität' am häufigsten genannt."});
                 localStorage.setItem("images", JSON.stringify(imagesArray));
             }
         });

@@ -20,6 +20,7 @@ export interface Field {
 export interface Image {
     name: string,
     src: string,
+    description: string,
 };
 
 export const generateId = ():number => {
