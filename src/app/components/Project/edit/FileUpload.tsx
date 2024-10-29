@@ -127,7 +127,7 @@ const FileUpload: React.FC = () => {
                     fileFieldNames.forEach((fieldName, index) => {
 
                         const newField: Field = {
-                            id: parseInt(index.toString() + generateId().toString()),
+                            id: parseInt(index.toString() + String(generateId()).padStart(10, '0')),
                             name: fieldName,
                             type: "Text"
                         };
