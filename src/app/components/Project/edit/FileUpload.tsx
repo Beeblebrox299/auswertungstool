@@ -127,7 +127,7 @@ const FileUpload: React.FC = () => {
                     fileFieldNames.forEach((fieldName, index) => {
 
                         const newField: Field = {
-                            id: generateId(),
+                            id: parseInt(index.toString() + generateId().toString()),
                             name: fieldName,
                             type: "Text"
                         };
@@ -157,9 +157,9 @@ const FileUpload: React.FC = () => {
         const categories = getCategories();
         const contributions: Contribution[] = [];
 
-        data.forEach((contributionFromData: Contribution, index:number) => {
+        data.forEach((contributionFromData: Contribution) => {
             const contribution: Contribution = {
-                id: parseInt((index.toString()) + generateId()),
+                id: generateId(),
                 categories: [],
                 categories_confirmed: false,
             }; 
