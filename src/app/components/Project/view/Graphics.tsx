@@ -91,7 +91,7 @@ export const AgePieChart: React.FC = () => {
     return(
         <div>
         {isClient && (
-            <PieChart width={500} height={300}>
+            <PieChart width={650} height={400}>
                 <Pie
                     data={data}
                     dataKey="value"

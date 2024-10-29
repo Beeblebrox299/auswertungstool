@@ -11,7 +11,7 @@ const defaultProject = {
 
 const ReportForm: React.FC = () => {
     const getEinleitung = (project: {place: string, startDate: string, endDate: string, multiCategory: string}) => {
-        return "Vom " + project.startDate + " bis zum " + project.endDate + " konnten BürgerInnen in " + project.place + " Beiträge abgeben. \nDie Ergebnisse möchten wir in diesem Bericht vorstellen."
+        return "Vom " + project.startDate + " bis zum " + project.endDate + " hatten Bürgerinnen und Bürger in " + project.place + " die Möglichkeit, Ideen und Anregungen zur Entwicklung ihrer Stadt abzugeben. \nDieser Bericht fasst die Beiträge zusammen, die Bürgerinnen und Bürger im Rahmen des Beteiligungsverfahrens eingereicht haben. Ziel dieser Bürgerbeteiligung war es, Meinungen, Anregungen und Ideen aus der Bevölkerung aufzunehmen, um die Entscheidungsprozesse transparenter zu gestalten und auf die Bedürfnisse der BürgerInnen einzugehen. Die Beiträge wurden systematisch erfasst und analysiert, um sowohl qualitative als auch quantitative Erkenntnisse über die wichtigsten Themen und Anliegen zu gewinnen. \nIm Folgenden werden die wesentlichen Themen und Schwerpunkte der Beiträge vorgestellt und ausgewertet."
     };
 
     const [graphics, setGraphics] = useState<Image[]>([]);
@@ -63,7 +63,7 @@ const ReportForm: React.FC = () => {
                             <img src={image.src}/>
                             <br/><br/>
                             <label>Beschreibung der Grafik: </label><br/>
-                            <textarea id={"description" + index} cols={50} rows={8} defaultValue={image.description}/>
+                            <textarea id={"description" + index} cols={100} rows={8} defaultValue={image.description}/>
                             <br/>
                             <button className="btn" onClick={(event) => {
                                 event.preventDefault();
