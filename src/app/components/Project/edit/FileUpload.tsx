@@ -124,10 +124,10 @@ const FileUpload: React.FC = () => {
                             fileFieldNames.splice(fileFieldNames.indexOf(field.name), 1);
                         };
                     });
-                    fileFieldNames.forEach(fieldName => {
+                    fileFieldNames.forEach((fieldName, index) => {
 
                         const newField: Field = {
-                            id: generateId(),
+                            id: parseInt(index.toString() + generateId().toString()),
                             name: fieldName,
                             type: "Text"
                         };
